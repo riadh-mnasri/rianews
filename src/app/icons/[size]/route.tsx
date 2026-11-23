@@ -1,6 +1,7 @@
 // © 2026 Riadh MNASRI
 import { ImageResponse } from "next/og";
 import { IconArt } from "@/lib/icon-art";
+import { loadIconFont } from "@/lib/icon-font";
 
 const VARIANTS: Record<string, { size: number; padding: number }> = {
   "192": { size: 192, padding: 0 },
@@ -20,5 +21,6 @@ export async function GET(_req: Request, { params }: { params: Promise<{ size: s
   return new ImageResponse(<IconArt size={variant.size} padding={variant.padding} />, {
     width: variant.size,
     height: variant.size,
+    fonts: await loadIconFont(),
   });
 }

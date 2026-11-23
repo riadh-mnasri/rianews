@@ -34,15 +34,15 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return {
     title: t("title"),
     description: t("description"),
-    applicationName: "L'Essentiel",
+    applicationName: "RiaNews",
     authors: [{ name: "Riadh MNASRI" }],
-    appleWebApp: { capable: true, title: "L'Essentiel", statusBarStyle: "default" },
+    appleWebApp: { capable: true, title: "RiaNews", statusBarStyle: "default" },
     formatDetection: { telephone: false },
     alternates: { languages: { fr: "/fr", en: "/en" } },
     openGraph: {
       title: t("title"),
       description: t("description"),
-      siteName: "L'Essentiel",
+      siteName: "RiaNews",
       locale: locale === "fr" ? "fr_FR" : "en_US",
       type: "website",
     },

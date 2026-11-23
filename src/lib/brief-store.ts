@@ -17,7 +17,7 @@ const memory = new Map<string, Brief | null>();
 const listeners = new Set<() => void>();
 let version = 0;
 
-const storageKey = (key: string) => `lessentiel-brief-${key}`;
+const storageKey = (key: string) => `rianews-brief-${key}`;
 
 function getSaved(key: string): Brief | null {
   if (!memory.has(key)) {

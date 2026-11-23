@@ -14,8 +14,8 @@ export type Prefs = {
 };
 
 export const TEXT_SIZES = [17, 19, 21, 23, 26];
-const STORAGE_KEY = "lessentiel-prefs";
-const EVENT = "lessentiel-prefs-change";
+const STORAGE_KEY = "rianews-prefs";
+const EVENT = "rianews-prefs-change";
 
 const DEFAULT_PREFS: Prefs = {
   interests: [...CATEGORY_IDS],

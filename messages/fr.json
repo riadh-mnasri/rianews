@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "L'Essentiel : l'actu qui compte, en deux minutes",
+    "title": "RiaNews : l'actu qui compte, en deux minutes",
     "description": "Les dernières infos qui comptent en IA, tech, politique, actualité et économie, résumées en quelques lignes et faciles à lire sur mobile."
   },
   "categories": {
@@ -63,7 +63,7 @@
     "preview": "Un texte bien lisible, sans effort."
   },
   "install": {
-    "title": "Installe L'Essentiel",
+    "title": "Installe RiaNews",
     "android": "Ajoute l'app à ton écran d'accueil pour l'ouvrir en un geste.",
     "button": "Installer",
     "dismiss": "Plus tard",

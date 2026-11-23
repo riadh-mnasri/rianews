@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { Share, X } from "lucide-react";
 
 type InstallPromptEvent = Event & { prompt: () => Promise<void> };
-const DISMISS_KEY = "lessentiel-install-dismissed";
+const DISMISS_KEY = "rianews-install-dismissed";
 
 export function InstallBanner() {
   const t = useTranslations("install");
@@ -48,7 +48,7 @@ export function InstallBanner() {
     <div className="pb-safe fixed inset-x-0 bottom-0 z-30 px-4">
       <div className="sheet-in mx-auto flex max-w-md items-start gap-3 rounded-3xl border border-border/70 bg-surface/95 p-4 shadow-2xl backdrop-blur-xl">
         <span className="serif flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent text-xl font-bold text-accent-foreground">
-          E
+          R
         </span>
         <div className="min-w-0 flex-1">
           <p className="font-semibold">{t("title")}</p>

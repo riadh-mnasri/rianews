@@ -9,10 +9,10 @@ export function Logo({ size = "md" }: { size?: "md" | "lg" }) {
           big ? "h-12 w-12 text-[1.7rem]" : "h-9 w-9 text-[1.3rem]"
         }`}
       >
-        E
+        R
       </span>
       <span className={`serif font-semibold tracking-tight ${big ? "text-[1.7rem]" : "text-[1.3rem]"}`}>
-        L&apos;Essentiel
+        Ria<span className="text-accent">News</span>
       </span>
     </span>
   );

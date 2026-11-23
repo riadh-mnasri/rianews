@@ -4,8 +4,8 @@ import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
-    name: "L'Essentiel",
-    short_name: "L'Essentiel",
+    name: "RiaNews",
+    short_name: "RiaNews",
     description: "L'actu qui compte, en deux minutes : IA, tech, politique, actualités, économie.",
     start_url: "/",
     scope: "/",

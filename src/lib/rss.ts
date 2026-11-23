@@ -26,7 +26,7 @@ function cleanExcerpt(value: string | undefined): string | null {
 async function fetchFeed(url: string, label: string): Promise<RawItem[]> {
   try {
     const res = await fetch(url, {
-      headers: { "User-Agent": "Mozilla/5.0 (compatible; LEssentiel/1.0)" },
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; RiaNews/1.0)" },
       signal: AbortSignal.timeout(8000),
       next: { revalidate: 900 },
     });

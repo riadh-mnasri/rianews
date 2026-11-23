@@ -40,7 +40,7 @@ function buildPrompt(items: RawItem[], category: CategoryId, locale: "fr" | "en"
     .join("\n");
   const language = locale === "fr" ? "français" : "anglais";
 
-  return `Tu rédiges « L'Essentiel », un brief d'actualité lu sur mobile par quelqu'un de pressé qui veut être au courant et pouvoir en parler autour de lui.
+  return `Tu rédiges « RiaNews », un brief d'actualité lu sur mobile par quelqu'un de pressé qui veut être au courant et pouvoir en parler autour de lui.
 
 Rubrique : ${TOPIC_LABEL[category][locale]}.
 

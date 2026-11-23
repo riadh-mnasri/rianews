@@ -1,7 +1,7 @@
 // © 2026 Riadh MNASRI
 // Service worker minimal : rend l'app installable et lisible hors ligne
 // (dernière version des pages et des briefs gardée en cache).
-const CACHE = "lessentiel-v1";
+const CACHE = "rianews-v1";
 const SHELL = ["/fr", "/en"];
 
 self.addEventListener("install", (event) => {

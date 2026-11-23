@@ -1,6 +1,6 @@
 // © 2026 Riadh MNASRI
 
-// Pictogramme de l'app : un « E » serif crème sur fond rouge presse.
+// Pictogramme de l'app : un « R » serif crème sur fond rouge presse.
 export function IconArt({ size, padding = 0 }: { size: number; padding?: number }) {
   const inner = size - padding * 2;
   return (
@@ -23,13 +23,13 @@ export function IconArt({ size, padding = 0 }: { size: number; padding?: number 
           justifyContent: "center",
           flexDirection: "column",
           color: "#fff8f0",
-          fontFamily: "Georgia, serif",
+          fontFamily: "Newsreader, Georgia, serif",
           fontWeight: 700,
           fontSize: inner * 0.62,
           lineHeight: 1,
         }}
       >
-        <span style={{ marginTop: -inner * 0.04 }}>E</span>
+        <span style={{ marginTop: -inner * 0.04 }}>R</span>
         <div
           style={{
             width: inner * 0.34,
@@ -37,7 +37,7 @@ export function IconArt({ size, padding = 0 }: { size: number; padding?: number 
             background: "#fff8f0",
             opacity: 0.85,
             borderRadius: 99,
-            marginTop: inner * 0.02,
+            marginTop: -inner * 0.13,
           }}
         />
       </div>
