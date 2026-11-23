@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Check, MessageCircle, Share2 } from "lucide-react";
+import { Check, Share } from "lucide-react";
 import type { CategoryId } from "@/data/categories";
 import { CATEGORY_META } from "@/data/category-meta";
 import type { Story } from "@/lib/types";
@@ -13,18 +13,15 @@ export function StoryCard({
   story,
   category,
   index,
-  showCategory = false,
 }: {
   story: Story;
   category: CategoryId;
   index: number;
-  showCategory?: boolean;
 }) {
   const t = useTranslations("home");
-  const tc = useTranslations("categories");
   const timeAgo = useTimeAgo();
   const [copied, setCopied] = useState(false);
-  const meta = CATEGORY_META[category];
+  const color = CATEGORY_META[category].color;
   const when = timeAgo(story.publishedAt);
 
   async function share() {
@@ -43,83 +40,67 @@ export function StoryCard({
 
   return (
     <article
-      className="rise relative rounded-3xl border border-border/70 bg-surface p-5 shadow-card sm:p-6"
-      style={{ animationDelay: `${Math.min(index, 6) * 60}ms` }}
+      className="rise border-t border-border py-7 first:border-t-0 first:pt-2"
+      style={{ animationDelay: `${Math.min(index, 6) * 50}ms` }}
     >
-      <div className="flex items-center gap-2 text-[0.8125rem] font-medium text-foreground-muted">
-        {showCategory ? (
-          <span className="flex items-center gap-1.5 font-semibold" style={{ color: meta.color }}>
-            <meta.icon className="h-3.5 w-3.5" strokeWidth={2.5} />
-            {tc(category)}
-          </span>
-        ) : (
-          <span
-            className="serif flex h-6 w-6 items-center justify-center rounded-full text-[0.8125rem] font-bold"
-            style={{ color: meta.color, background: `color-mix(in srgb, ${meta.color} 14%, transparent)` }}
-          >
-            {index + 1}
-          </span>
-        )}
-        {when && (
-          <>
-            <span aria-hidden>·</span>
-            <span>{when}</span>
-          </>
-        )}
+      <div className="flex items-baseline gap-3">
+        <span className="serif text-[1.9em] leading-none font-medium tabular-nums" style={{ color }}>
+          {index + 1}
+        </span>
+        {when && <span className="kicker text-foreground-muted">{when}</span>}
       </div>
 
-      <h3 className="serif mt-2.5 text-[1.32em] font-semibold leading-[1.22] tracking-[-0.01em] text-balance">
+      <h3 className="serif mt-2 text-[1.4em] leading-[1.18] font-semibold tracking-[-0.012em] text-balance">
         {story.title}
       </h3>
 
       {story.essentiel && (
-        <p className="serif mt-2.5 text-[1em] leading-[1.6] text-foreground/90 text-pretty">
-          {story.essentiel}
-        </p>
+        <p className="serif hyphens mt-3 text-[1em] leading-[1.62] text-pretty">{story.essentiel}</p>
       )}
 
       {story.pourquoi && (
-        <div className="mt-4 border-l-[3px] pl-3.5" style={{ borderColor: meta.color }}>
-          <p className="text-[0.68em] font-bold uppercase tracking-[0.08em] text-foreground-muted">
-            {t("why")}
-          </p>
-          <p className="serif mt-0.5 text-[0.95em] leading-[1.55] text-foreground/85">{story.pourquoi}</p>
-        </div>
+        <p className="serif hyphens mt-3 text-[0.94em] leading-[1.58] text-foreground-muted">
+          <span className="kicker mr-1.5 text-foreground" style={{ fontSize: "0.74em" }}>
+            {t("why")}.
+          </span>
+          {story.pourquoi}
+        </p>
       )}
 
       {story.aPlacer && (
-        <div className="mt-4 flex gap-3 rounded-2xl bg-accent-soft px-4 py-3">
-          <MessageCircle className="mt-[0.2em] h-[1.05em] w-[1.05em] shrink-0 text-accent" strokeWidth={2.25} />
-          <div>
-            <p className="text-[0.68em] font-bold uppercase tracking-[0.08em] text-accent">{t("toDrop")}</p>
-            <p className="serif mt-0.5 text-[0.95em] italic leading-[1.5]">{story.aPlacer}</p>
-          </div>
-        </div>
+        <figure className="mt-5 border-l-2 pl-4" style={{ borderColor: "var(--accent)" }}>
+          <figcaption className="kicker text-accent" style={{ fontSize: "0.66em" }}>
+            {t("toDrop")}
+          </figcaption>
+          <blockquote className="serif mt-1 text-[1.02em] leading-[1.5] italic">
+            « {story.aPlacer} »
+          </blockquote>
+        </figure>
       )}
 
-      <div className="mt-4 flex items-center justify-between gap-3 border-t border-border/70 pt-3">
-        <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-[0.8125rem] text-foreground-muted">
+      <div className="mt-5 flex items-center justify-between gap-3">
+        <p className="min-w-0 text-[0.72em] text-foreground-muted">
           {story.sources.map((source, i) => (
-            <span key={source.url} className="flex items-center gap-2">
-              {i > 0 && <span aria-hidden>·</span>}
+            <span key={source.url}>
+              {i > 0 && <span className="mx-1.5 opacity-50">/</span>}
               <a
                 href={source.url}
                 target="_blank"
                 rel="noreferrer"
-                className="truncate underline decoration-border underline-offset-4 transition-colors hover:text-foreground active:text-accent"
+                className="underline decoration-border decoration-1 underline-offset-[3px] transition-colors hover:text-foreground hover:decoration-current"
               >
                 {source.label}
               </a>
             </span>
           ))}
-        </div>
+        </p>
         <button
           type="button"
           onClick={share}
           aria-label={t("share")}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-foreground-muted transition-all hover:bg-surface-muted hover:text-foreground active:scale-90"
+          className="-mr-2 flex h-9 w-9 shrink-0 items-center justify-center text-foreground-muted transition-colors hover:text-foreground active:scale-90"
         >
-          {copied ? <Check className="h-4 w-4 text-accent" /> : <Share2 className="h-4 w-4" />}
+          {copied ? <Check className="h-4 w-4 text-accent" /> : <Share className="h-4 w-4" strokeWidth={1.75} />}
         </button>
       </div>
     </article>
@@ -128,13 +109,13 @@ export function StoryCard({
 
 export function StorySkeleton() {
   return (
-    <div className="rounded-3xl border border-border/70 bg-surface p-5 shadow-card">
-      <div className="skeleton h-4 w-24" />
+    <div className="border-t border-border py-7 first:border-t-0 first:pt-2">
+      <div className="skeleton h-7 w-7" />
       <div className="skeleton mt-4 h-6 w-11/12" />
-      <div className="skeleton mt-2 h-6 w-2/3" />
-      <div className="skeleton mt-4 h-4 w-full" />
-      <div className="skeleton mt-2 h-4 w-10/12" />
-      <div className="skeleton mt-5 h-14 w-full rounded-2xl" />
+      <div className="skeleton mt-2 h-6 w-3/5" />
+      <div className="skeleton mt-5 h-4 w-full" />
+      <div className="skeleton mt-2 h-4 w-full" />
+      <div className="skeleton mt-2 h-4 w-2/3" />
     </div>
   );
 }

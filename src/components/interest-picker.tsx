@@ -17,7 +17,7 @@ export function InterestPicker({
   const th = useTranslations("categoryHints");
 
   return (
-    <div className="grid gap-2.5">
+    <div className="divide-y divide-border border-y border-border">
       {CATEGORY_IDS.map((id) => {
         const active = value.includes(id);
         const meta = CATEGORY_META[id];
@@ -27,28 +27,26 @@ export function InterestPicker({
             type="button"
             aria-pressed={active}
             onClick={() => onChange(active ? value.filter((v) => v !== id) : [...value, id])}
-            className={`flex items-center gap-3.5 rounded-2xl border px-4 py-3.5 text-left transition-all active:scale-[0.98] ${
-              active ? "border-transparent bg-surface shadow-card" : "border-border bg-transparent opacity-70"
-            }`}
-            style={active ? { boxShadow: `inset 0 0 0 2px ${meta.color}` } : undefined}
+            className="flex w-full items-center gap-4 py-4 text-left transition-opacity active:opacity-70"
           >
-            <span
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl"
-              style={{ color: meta.color, background: `color-mix(in srgb, ${meta.color} 13%, transparent)` }}
-            >
-              <meta.icon className="h-5 w-5" strokeWidth={2.25} />
+            <meta.icon
+              className="h-5 w-5 shrink-0 transition-opacity"
+              style={{ color: meta.color, opacity: active ? 1 : 0.4 }}
+              strokeWidth={1.75}
+            />
+            <span className={`min-w-0 flex-1 transition-opacity ${active ? "" : "opacity-55"}`}>
+              <span className="serif block text-[1.2rem] leading-tight font-semibold">{tc(id)}</span>
+              <span className="block text-[0.85rem] text-foreground-muted">{th(id)}</span>
             </span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-[1.05rem] font-semibold">{tc(id)}</span>
-              <span className="block text-sm text-foreground-muted">{th(id)}</span>
-            </span>
             <span
-              className={`flex h-6 w-6 items-center justify-center rounded-full border-2 transition-colors ${
-                active ? "border-transparent text-white" : "border-border"
-              }`}
-              style={active ? { background: meta.color } : undefined}
+              className="flex h-6 w-6 shrink-0 items-center justify-center border-[1.5px] transition-colors"
+              style={
+                active
+                  ? { background: "var(--foreground)", borderColor: "var(--foreground)", color: "var(--background)" }
+                  : { borderColor: "var(--border)" }
+              }
             >
-              {active && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
+              {active && <Check className="h-4 w-4" strokeWidth={2.5} />}
             </span>
           </button>
         );

@@ -15,10 +15,10 @@ export function Onboarding() {
   return (
     <div className="fade-in fixed inset-0 z-50 overflow-y-auto bg-background">
       <div className="pt-safe mx-auto flex min-h-full max-w-md flex-col px-6 pb-8">
-        <div className="pt-10">
+        <div className="masthead-rule pt-10 pb-3">
           <Logo size="lg" />
         </div>
-        <h1 className="serif mt-8 text-[2rem] font-semibold leading-tight tracking-tight">{t("title")}</h1>
+        <h1 className="serif mt-8 text-[2.1rem] leading-tight font-semibold tracking-[-0.02em]">{t("title")}</h1>
         <p className="mt-2 text-[1.05rem] leading-relaxed text-foreground-muted">{t("text")}</p>
         <div className="mt-7">
           <InterestPicker value={interests} onChange={setInterests} />
@@ -28,7 +28,7 @@ export function Onboarding() {
             type="button"
             disabled={interests.length === 0}
             onClick={() => setPrefs({ interests, onboarded: true })}
-            className="w-full rounded-2xl bg-accent py-4 text-[1.05rem] font-semibold text-accent-foreground shadow-card transition-all active:scale-[0.98] disabled:opacity-40"
+            className="w-full bg-foreground py-4 text-[1.02rem] font-semibold text-background transition-opacity hover:opacity-90 active:scale-[0.99] disabled:opacity-35"
           >
             {interests.length === 0 ? t("pickOne") : t("start")}
           </button>

@@ -3,7 +3,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { ChevronRight, Info, Newspaper, RefreshCw, Settings2, WifiOff } from "lucide-react";
+import { ArrowRight, Newspaper, RefreshCw, Settings2, WifiOff } from "lucide-react";
 import type { CategoryId } from "@/data/categories";
 import { CATEGORY_META } from "@/data/category-meta";
 import { useBriefs, type BriefState } from "@/lib/brief-store";
@@ -19,12 +19,15 @@ import { useClientValue, useOnline } from "@/lib/client-values";
 
 type Tab = "home" | CategoryId;
 
-function useGreeting() {
+const iconBtn =
+  "flex h-9 w-9 items-center justify-center text-foreground-muted transition-colors hover:text-foreground active:scale-90";
+
+function useEdition() {
   const t = useTranslations("home");
   const hour = useClientValue(() => new Date().getHours(), 9);
-  if (hour < 12) return t("greetingMorning");
-  if (hour < 18) return t("greetingAfternoon");
-  return t("greetingEvening");
+  if (hour < 12) return t("editionMorning");
+  if (hour < 18) return t("editionAfternoon");
+  return t("editionEvening");
 }
 
 function EmptyState({
@@ -39,14 +42,22 @@ function EmptyState({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="rise flex flex-col items-center rounded-3xl border border-dashed border-border px-6 py-12 text-center">
-      <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-muted text-foreground-muted">
-        <Icon className="h-7 w-7" />
-      </span>
-      <p className="serif mt-4 text-[1.2em] font-semibold">{title}</p>
-      <p className="mt-1 max-w-xs text-[0.9em] text-foreground-muted">{text}</p>
+    <div className="rise flex flex-col items-center border-y border-border px-6 py-12 text-center">
+      <Icon className="h-8 w-8 text-foreground-muted" strokeWidth={1.5} />
+      <p className="serif mt-4 text-[1.25em] font-semibold">{title}</p>
+      {text && <p className="mt-1 max-w-xs text-[0.85em] text-foreground-muted">{text}</p>}
       {action}
     </div>
+  );
+}
+
+function PrimaryButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button
+      type="button"
+      {...props}
+      className="mt-5 bg-foreground px-5 py-2.5 text-[0.8em] font-semibold text-background transition-opacity hover:opacity-85 active:scale-95"
+    />
   );
 }
 
@@ -71,20 +82,12 @@ function CategoryFeed({
           icon={WifiOff}
           title={t("loadError")}
           text=""
-          action={
-            <button
-              type="button"
-              onClick={onRetry}
-              className="mt-4 rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground active:scale-95"
-            >
-              {t("retry")}
-            </button>
-          }
+          action={<PrimaryButton onClick={onRetry}>{t("retry")}</PrimaryButton>}
         />
       );
     }
     return (
-      <div className="space-y-4">
+      <div>
         {Array.from({ length: limit ?? 3 }, (_, i) => (
           <StorySkeleton key={i} />
         ))}
@@ -98,9 +101,9 @@ function CategoryFeed({
 
   const stories = limit ? brief.stories.slice(0, limit) : brief.stories;
   return (
-    <div className="space-y-4">
+    <div>
       {brief.intro && (
-        <p className="serif px-1 text-[1.05em] italic leading-snug text-foreground-muted text-pretty">
+        <p className="serif mb-4 text-[1.08em] leading-snug text-foreground-muted italic text-pretty">
           {brief.intro}
         </p>
       )}
@@ -117,7 +120,7 @@ export function AppShell() {
   const tf = useTranslations("footer");
   const locale = useLocale();
   const prefs = usePrefs();
-  const greeting = useGreeting();
+  const edition = useEdition();
   const timeAgo = useTimeAgo();
   const [tab, setTab] = useState<Tab>("home");
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -178,131 +181,111 @@ export function AppShell() {
     })
     .slice(0, 3);
 
-  const storyCount = interests.reduce(
+  const storyCount = (activeTab === "home" ? interests : [activeTab]).reduce(
     (n, c) => n + Math.min(states[c]?.brief?.stories.length ?? 0, activeTab === "home" ? 3 : 99),
     0,
   );
-  const minutes = Math.max(1, Math.round((storyCount * 70) / 230));
+  const minutes = Math.max(1, Math.round((storyCount * 75) / 230));
 
   return (
-    <div className="paper relative min-h-dvh">
+    <div className="relative min-h-dvh">
       {!prefs.onboarded && <Onboarding />}
 
-      <header className="pt-safe sticky top-0 z-20 border-b border-border/60 bg-background/80 backdrop-blur-xl backdrop-saturate-150">
-        <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-3 sm:px-5">
+      <header className="pt-safe sticky top-0 z-20 bg-background">
+        <div className="masthead-rule mx-auto flex max-w-[46rem] lg:max-w-[50rem] items-center justify-between px-5 pt-3 pb-2.5 md:pt-5 md:pb-3">
           <Logo />
-          <div className="flex items-center gap-0.5">
+          <div className="-mr-2 flex items-center">
             <LocaleToggle />
             <ThemeToggle />
-            <button
-              type="button"
-              onClick={refresh}
-              aria-label={t("refresh")}
-              className="flex h-9 w-9 items-center justify-center rounded-full text-foreground-muted transition-all hover:bg-surface-muted hover:text-foreground active:scale-90"
-            >
-              <RefreshCw className={`h-[1.15rem] w-[1.15rem] ${anyLoading ? "animate-spin" : ""}`} />
+            <button type="button" onClick={refresh} aria-label={t("refresh")} className={iconBtn}>
+              <RefreshCw className={`h-[1.05rem] w-[1.05rem] ${anyLoading ? "animate-spin" : ""}`} strokeWidth={1.75} />
             </button>
-            <button
-              type="button"
-              onClick={() => setSettingsOpen(true)}
-              aria-label={t("settings")}
-              className="flex h-9 w-9 items-center justify-center rounded-full text-foreground-muted transition-all hover:bg-surface-muted hover:text-foreground active:scale-90"
-            >
-              <Settings2 className="h-[1.15rem] w-[1.15rem]" />
+            <button type="button" onClick={() => setSettingsOpen(true)} aria-label={t("settings")} className={iconBtn}>
+              <Settings2 className="h-[1.05rem] w-[1.05rem]" strokeWidth={1.75} />
             </button>
           </div>
         </div>
-        <div ref={tabsRef} className="no-scrollbar mx-auto flex max-w-2xl gap-2 overflow-x-auto px-5 pb-3">
-          {tabs.map((id) => {
-            const active = id === activeTab;
-            const meta = id === "home" ? null : CATEGORY_META[id];
-            return (
-              <button
-                key={id}
-                data-tab={id}
-                type="button"
-                onClick={() => goTo(id)}
-                className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-[0.95rem] font-semibold transition-all active:scale-95 ${
-                  active
-                    ? "bg-foreground text-background shadow-card"
-                    : "bg-surface-muted/70 text-foreground-muted hover:text-foreground"
-                }`}
-              >
-                {meta && (
+        <nav className="border-b border-border">
+          <div ref={tabsRef} className="no-scrollbar mx-auto flex max-w-[46rem] lg:max-w-[50rem] gap-6 overflow-x-auto px-5">
+            {tabs.map((id) => {
+              const active = id === activeTab;
+              const color = id === "home" ? "var(--foreground)" : CATEGORY_META[id].color;
+              return (
+                <button
+                  key={id}
+                  data-tab={id}
+                  type="button"
+                  onClick={() => goTo(id)}
+                  className={`relative shrink-0 py-3 text-[0.8rem] font-semibold md:text-[0.9rem] tracking-[0.06em] uppercase transition-colors ${
+                    active ? "text-foreground" : "text-foreground-muted hover:text-foreground"
+                  }`}
+                >
+                  {id === "home" ? t("all") : tc(id)}
                   <span
-                    className="h-2 w-2 rounded-full"
-                    style={{ background: active ? "currentColor" : meta.color }}
+                    className={`absolute inset-x-0 -bottom-px h-[3px] transition-opacity ${active ? "opacity-100" : "opacity-0"}`}
+                    style={{ background: color }}
                   />
-                )}
-                {id === "home" ? t("all") : tc(id)}
-              </button>
-            );
-          })}
-        </div>
+                </button>
+              );
+            })}
+          </div>
+        </nav>
       </header>
 
       <main
-        className="reading relative z-10 mx-auto max-w-2xl px-4 pt-6 pb-16 sm:px-5"
+        className="reading mx-auto max-w-[46rem] lg:max-w-[50rem] px-5 pt-7 pb-16 md:pt-10"
         onTouchStart={(e) => (touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY })}
         onTouchEnd={onTouchEnd}
       >
         {offline && (
-          <div className="mb-4 flex items-center gap-2 rounded-2xl bg-surface-muted px-4 py-3 text-[0.8em] text-foreground-muted">
-            <WifiOff className="h-4 w-4 shrink-0" /> {t("offline")}
-          </div>
+          <p className="mb-5 flex items-center gap-2 border-y border-border py-2.5 text-[0.75em] text-foreground-muted">
+            <WifiOff className="h-4 w-4 shrink-0" strokeWidth={1.75} /> {t("offline")}
+          </p>
         )}
 
-        <div className="mb-6 px-1">
-          <p className="text-[0.75em] font-semibold uppercase tracking-[0.12em] text-accent first-letter:uppercase">
+        <div className="mb-7">
+          <p className="kicker text-foreground-muted first-letter:uppercase">
             {today}
+            {today && activeTab === "home" && <span className="text-accent"> · {edition}</span>}
           </p>
-          <h1 className="serif mt-1 text-[1.75em] font-semibold leading-tight tracking-tight">
-            {activeTab === "home" ? `${greeting}.` : tc(activeTab)}
+          <h1 className="serif mt-2 text-[2.1em] leading-[1.05] font-semibold tracking-[-0.02em]">
+            {activeTab === "home" ? t("homeTitle") : tc(activeTab)}
           </h1>
-          <p className="mt-1 text-[0.85em] text-foreground-muted">
-            {activeTab === "home" ? `${t("subtitle")} ` : ""}
+          <p className="mt-2 text-[0.75em] text-foreground-muted">
             {storyCount > 0 && t("readingTime", { minutes })}
             {lastUpdate && <> · {t("updated", { time: timeAgo(lastUpdate) ?? "" })}</>}
+            {rawMode && <span className="block pt-1 opacity-80">{t("rawMode")}</span>}
           </p>
         </div>
-
-        {rawMode && (
-          <div className="mb-5 flex gap-2.5 rounded-2xl border border-border bg-surface px-4 py-3 text-[0.78em] leading-snug text-foreground-muted">
-            <Info className="mt-0.5 h-4 w-4 shrink-0" />
-            {t("rawMode")}
-          </div>
-        )}
 
         {interests.length === 0 ? (
           <EmptyState
             icon={Newspaper}
             title={t("noInterestTitle")}
             text={t("noInterestText")}
-            action={
-              <button
-                type="button"
-                onClick={() => setSettingsOpen(true)}
-                className="mt-5 rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground active:scale-95"
-              >
-                {t("chooseInterests")}
-              </button>
-            }
+            action={<PrimaryButton onClick={() => setSettingsOpen(true)}>{t("chooseInterests")}</PrimaryButton>}
           />
         ) : activeTab === "home" ? (
-          <div className="space-y-10">
+          <div className="space-y-12">
             {topThree.length > 0 && (
-              <section className="rise rounded-3xl bg-foreground p-5 text-background shadow-card sm:p-6">
-                <h2 className="text-[0.72em] font-bold uppercase tracking-[0.12em] opacity-70">{t("topThree")}</h2>
-                <ol className="mt-3 space-y-4">
+              <section className="rise border-t-[3px] border-rule bg-surface-muted/60 px-5 pt-4 pb-5 dark:bg-surface">
+                <h2 className="kicker text-foreground">{t("topThree")}</h2>
+                <ol className="mt-3 divide-y divide-border">
                   {topThree.map(({ category, story }, i) => (
                     <li key={story.id}>
-                      <button type="button" onClick={() => goTo(category)} className="flex w-full gap-3.5 text-left">
-                        <span className="serif text-[1.6em] font-semibold leading-none text-accent">{i + 1}</span>
-                        <span>
-                          <span className="block text-[0.72em] font-semibold uppercase tracking-[0.08em] opacity-60">
+                      <button
+                        type="button"
+                        onClick={() => goTo(category)}
+                        className="group flex w-full gap-4 py-3 text-left"
+                      >
+                        <span className="serif text-[1.5em] leading-none font-medium text-accent tabular-nums">{i + 1}</span>
+                        <span className="min-w-0">
+                          <span className="kicker block" style={{ color: CATEGORY_META[category].color, fontSize: "0.62em" }}>
                             {tc(category)}
                           </span>
-                          <span className="serif mt-0.5 block text-[1.08em] font-medium leading-snug">{story.title}</span>
+                          <span className="serif mt-0.5 block text-[1.06em] leading-snug font-medium decoration-1 underline-offset-4 group-hover:underline">
+                            {story.title}
+                          </span>
                         </span>
                       </button>
                     </li>
@@ -315,20 +298,20 @@ export function AppShell() {
               const meta = CATEGORY_META[category];
               return (
                 <section key={category}>
-                  <div className="mb-3 flex items-center justify-between px-1">
-                    <h2 className="flex items-center gap-2 text-[0.8em] font-bold uppercase tracking-[0.1em]" style={{ color: meta.color }}>
-                      <meta.icon className="h-4 w-4" strokeWidth={2.5} />
+                  <div className="mb-2 flex items-center gap-3">
+                    <h2 className="kicker shrink-0" style={{ color: meta.color, fontSize: "0.78em" }}>
                       {tc(category)}
                     </h2>
-                    <button
-                      type="button"
-                      onClick={() => goTo(category)}
-                      className="flex items-center gap-0.5 text-[0.78em] font-semibold text-foreground-muted transition-colors hover:text-foreground"
-                    >
-                      {t("seeMore")} <ChevronRight className="h-4 w-4" />
-                    </button>
+                    <span className="h-px flex-1" style={{ background: meta.color, opacity: 0.45 }} />
                   </div>
                   <CategoryFeed category={category} state={states[category]} limit={3} onRetry={refresh} />
+                  <button
+                    type="button"
+                    onClick={() => goTo(category)}
+                    className="mt-1 flex items-center gap-1.5 text-[0.75em] font-semibold text-foreground-muted transition-colors hover:text-foreground"
+                  >
+                    {t("seeMore")} <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} />
+                  </button>
                 </section>
               );
             })}
@@ -337,9 +320,9 @@ export function AppShell() {
           <CategoryFeed key={activeTab} category={activeTab} state={states[activeTab]} onRetry={refresh} />
         )}
 
-        <footer className="mt-14 border-t border-border pt-6 text-center text-[0.72em] leading-relaxed text-foreground-muted">
+        <footer className="mt-16 border-t border-border pt-6 text-[0.68em] leading-relaxed text-foreground-muted">
           <p>{tf("disclaimer")}</p>
-          <p className="mt-2">© {new Date().getFullYear()} Riadh MNASRI · {tf("madeBy")}</p>
+          <p className="mt-2">© {new Date().getFullYear()} Riadh MNASRI</p>
         </footer>
       </main>
 

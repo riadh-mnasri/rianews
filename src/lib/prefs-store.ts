@@ -13,7 +13,7 @@ export type Prefs = {
   onboarded: boolean;
 };
 
-export const TEXT_SIZES = [17, 19, 21, 23, 26];
+export const TEXT_SIZES = [18, 20, 22, 24, 27];
 const STORAGE_KEY = "rianews-prefs";
 const EVENT = "rianews-prefs-change";
 
@@ -50,10 +50,10 @@ export function applyPrefsToDocument(prefs: Prefs) {
     prefs.theme === "dark" ||
     (prefs.theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
   root.classList.toggle("dark", dark);
-  root.style.setProperty("--reading-size", `${TEXT_SIZES[prefs.textSize] ?? 19}px`);
+  root.style.setProperty("--reading-size", `${TEXT_SIZES[prefs.textSize] ?? 20}px`);
   document
     .querySelector('meta[name="theme-color"]')
-    ?.setAttribute("content", dark ? "#15120e" : "#f8f4ec");
+    ?.setAttribute("content", dark ? "#1c1a17" : "#f5f0e6");
 }
 
 export function setPrefs(update: Partial<Prefs>) {
@@ -95,7 +95,7 @@ export const PREFS_INIT_SCRIPT = `
     var t = p.theme || "system";
     var dark = t === "dark" || (t === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
     if (dark) document.documentElement.classList.add("dark");
-    var s = sizes[p.textSize == null ? 1 : p.textSize] || 19;
+    var s = sizes[p.textSize == null ? 1 : p.textSize] || 20;
     document.documentElement.style.setProperty("--reading-size", s + "px");
   } catch (e) {}
 })();

@@ -24,7 +24,7 @@ function useIsDark(): boolean {
 }
 
 const btn =
-  "flex h-9 items-center justify-center rounded-full text-foreground-muted transition-all hover:bg-surface-muted hover:text-foreground active:scale-90";
+  "flex h-9 items-center justify-center text-foreground-muted transition-colors hover:text-foreground active:scale-90";
 
 export function ThemeToggle() {
   const t = useTranslations("home");
@@ -36,7 +36,7 @@ export function ThemeToggle() {
       aria-label={dark ? t("lightMode") : t("darkMode")}
       className={`${btn} w-9`}
     >
-      {dark ? <Sun className="h-[1.1rem] w-[1.1rem]" /> : <Moon className="h-[1.1rem] w-[1.1rem]" />}
+      {dark ? <Sun className="h-[1.05rem] w-[1.05rem]" strokeWidth={1.75} /> : <Moon className="h-[1.05rem] w-[1.05rem]" strokeWidth={1.75} />}
     </button>
   );
 }
@@ -52,7 +52,7 @@ export function LocaleToggle() {
       type="button"
       onClick={() => router.replace(pathname, { locale: next })}
       aria-label={t("switchLanguage")}
-      className={`${btn} gap-0.5 px-2 text-[0.8rem] font-bold tracking-wide`}
+      className={`${btn} gap-0.5 px-1.5 text-[0.74rem] font-semibold tracking-[0.06em]`}
     >
       <span className="text-foreground">{locale.toUpperCase()}</span>
       <span className="opacity-40">/</span>

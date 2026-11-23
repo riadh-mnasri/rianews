@@ -19,14 +19,14 @@ function Segmented<T extends string>({
   onChange: (v: T) => void;
 }) {
   return (
-    <div className="flex rounded-2xl bg-surface-muted p-1">
+    <div className="flex border border-border p-1">
       {options.map((o) => (
         <button
           key={o.value}
           type="button"
           onClick={() => onChange(o.value)}
-          className={`flex-1 rounded-xl py-2.5 text-[0.95rem] font-semibold transition-all ${
-            o.value === value ? "bg-surface text-foreground shadow-card" : "text-foreground-muted"
+          className={`flex-1 py-2.5 text-[0.9rem] font-semibold transition-colors ${
+            o.value === value ? "bg-foreground text-background" : "text-foreground-muted hover:text-foreground"
           }`}
         >
           {o.label}
@@ -59,26 +59,25 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
         type="button"
         aria-label={t("close")}
         onClick={onClose}
-        className="fade-in absolute inset-0 bg-black/40 backdrop-blur-[2px]"
+        className="fade-in absolute inset-0 bg-[#1c1a17]/45"
       />
-      <div className="sheet-in absolute inset-x-0 bottom-0 mx-auto max-h-[90dvh] max-w-xl overflow-y-auto rounded-t-[2rem] border border-border/70 bg-background shadow-2xl">
+      <div className="sheet-in absolute inset-x-0 bottom-0 mx-auto max-h-[90dvh] max-w-xl overflow-y-auto rounded-t-xl border-t-[3px] border-rule bg-background shadow-[0_-12px_40px_rgb(0_0_0/0.18)]">
         <div className="sticky top-0 z-10 flex items-center justify-between bg-background px-6 pt-3 pb-3">
-          <span className="absolute top-2 left-1/2 h-1.5 w-10 -translate-x-1/2 rounded-full bg-border" />
-          <h2 className="serif pt-3 text-2xl font-semibold">{t("title")}</h2>
+                    <h2 className="serif pt-2 text-[1.7rem] font-semibold">{t("title")}</h2>
           <button
             type="button"
             onClick={onClose}
             aria-label={t("close")}
-            className="mt-3 flex h-10 w-10 items-center justify-center rounded-full bg-surface-muted transition-transform active:scale-90"
+            className="mt-2 -mr-2 flex h-10 w-10 items-center justify-center text-foreground-muted transition-colors hover:text-foreground active:scale-90"
           >
-            <X className="h-5 w-5" />
+            <X className="h-5 w-5" strokeWidth={1.75} />
           </button>
         </div>
 
         <div className="pb-safe space-y-7 px-6 pt-2">
           <section>
-            <h3 className="mb-3 text-xs font-bold uppercase tracking-[0.1em] text-foreground-muted">{t("textSize")}</h3>
-            <div className="rounded-2xl bg-surface p-4 shadow-card">
+            <h3 className="kicker mb-3 text-foreground-muted" style={{ fontSize: "0.72rem" }}>{t("textSize")}</h3>
+            <div className="border border-border bg-surface p-4">
               <p className="serif leading-snug" style={{ fontSize: TEXT_SIZES[prefs.textSize] }}>
                 {t("preview")}
               </p>
@@ -100,12 +99,12 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
           </section>
 
           <section>
-            <h3 className="mb-3 text-xs font-bold uppercase tracking-[0.1em] text-foreground-muted">{t("interests")}</h3>
+            <h3 className="kicker mb-3 text-foreground-muted" style={{ fontSize: "0.72rem" }}>{t("interests")}</h3>
             <InterestPicker value={prefs.interests} onChange={(interests) => setPrefs({ interests })} />
           </section>
 
           <section>
-            <h3 className="mb-3 text-xs font-bold uppercase tracking-[0.1em] text-foreground-muted">{t("theme")}</h3>
+            <h3 className="kicker mb-3 text-foreground-muted" style={{ fontSize: "0.72rem" }}>{t("theme")}</h3>
             <Segmented<ThemePref>
               value={prefs.theme}
               onChange={(theme) => setPrefs({ theme })}
@@ -118,7 +117,7 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
           </section>
 
           <section>
-            <h3 className="mb-3 text-xs font-bold uppercase tracking-[0.1em] text-foreground-muted">{t("language")}</h3>
+            <h3 className="kicker mb-3 text-foreground-muted" style={{ fontSize: "0.72rem" }}>{t("language")}</h3>
             <Segmented
               value={locale}
               onChange={(next) => router.replace(pathname, { locale: next })}

@@ -1,6 +1,6 @@
 // © 2026 Riadh MNASRI
 import type { Metadata, Viewport } from "next";
-import { Inter, Newsreader } from "next/font/google";
+import { Libre_Franklin, Newsreader } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -9,7 +9,7 @@ import { PREFS_INIT_SCRIPT } from "@/lib/prefs-store";
 import { ServiceWorkerRegister } from "@/components/sw-register";
 import "../globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const franklin = Libre_Franklin({ subsets: ["latin"], variable: "--font-franklin", display: "swap" });
 const newsreader = Newsreader({
   subsets: ["latin"],
   variable: "--font-newsreader",
@@ -25,7 +25,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#f8f4ec",
+  themeColor: "#f5f0e6",
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -61,7 +61,7 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   return (
-    <html lang={locale} className={`${inter.variable} ${newsreader.variable} antialiased`} suppressHydrationWarning>
+    <html lang={locale} className={`${franklin.variable} ${newsreader.variable} antialiased`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: PREFS_INIT_SCRIPT }} />
       </head>

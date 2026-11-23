@@ -31,7 +31,7 @@
     "why": "Why it matters",
     "toDrop": "Conversation starter",
     "sources": "Sources",
-    "seeMore": "Open section",
+    "seeMore": "Full section",
     "rawMode": "Headlines mode: add an Anthropic API key to get summaries.",
     "loadError": "This section can't be loaded right now.",
     "retry": "Try again",
@@ -45,7 +45,11 @@
     "copied": "Copied!",
     "darkMode": "Switch to dark mode",
     "lightMode": "Switch to light mode",
-    "switchLanguage": "Passer en français"
+    "switchLanguage": "Passer en français",
+    "homeTitle": "What you need to know",
+    "editionMorning": "Morning edition",
+    "editionAfternoon": "Afternoon edition",
+    "editionEvening": "Evening edition"
   },
   "onboarding": {
     "title": "Your brief, your way",

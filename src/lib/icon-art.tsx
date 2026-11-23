@@ -11,7 +11,7 @@ export function IconArt({ size, padding = 0 }: { size: number; padding?: number 
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "#c8371d",
+        background: "#9e3b2a",
       }}
     >
       <div
@@ -22,7 +22,7 @@ export function IconArt({ size, padding = 0 }: { size: number; padding?: number 
           alignItems: "center",
           justifyContent: "center",
           flexDirection: "column",
-          color: "#fff8f0",
+          color: "#f8f1e6",
           fontFamily: "Newsreader, Georgia, serif",
           fontWeight: 700,
           fontSize: inner * 0.62,
@@ -34,7 +34,7 @@ export function IconArt({ size, padding = 0 }: { size: number; padding?: number 
           style={{
             width: inner * 0.34,
             height: Math.max(2, inner * 0.035),
-            background: "#fff8f0",
+            background: "#f8f1e6",
             opacity: 0.85,
             borderRadius: 99,
             marginTop: -inner * 0.13,

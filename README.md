@@ -11,8 +11,8 @@ Une app mobile installable (iPhone et Android) qui résume chaque jour l'essenti
 [![Next.js](https://img.shields.io/badge/Next.js-16-000?logo=nextdotjs)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
-[![Claude API](https://img.shields.io/badge/Claude_API-Anthropic-c8371d)](https://docs.claude.com)
-[![PWA](https://img.shields.io/badge/PWA-installable-5a0fc8?logo=pwa)](https://web.dev/progressive-web-apps/)
+[![Claude API](https://img.shields.io/badge/Claude_API-Anthropic-9e3b2a)](https://docs.claude.com)
+[![PWA](https://img.shields.io/badge/PWA-installable-6b6257?logo=pwa)](https://web.dev/progressive-web-apps/)
 [![Vercel](https://img.shields.io/badge/D%C3%A9ploy%C3%A9_sur-Vercel-000?logo=vercel)](https://rianews.vercel.app)
 [![Licence MIT](https://img.shields.io/badge/Licence-MIT-green)](./LICENSE)
 
@@ -46,16 +46,16 @@ Deux minutes de lecture le matin, et tu sais l'essentiel.
 
 | | |
 | --- | --- |
-| 📰 **Brief par rubrique** | Les 6 sujets les plus importants des dernières 48 heures, dédoublonnés entre médias et classés par importance. |
-| ⚡ **Format court** | Titre clair, l'essentiel en 2 phrases, « Pourquoi ça compte », « À placer en société ». |
-| 🥇 **Les 3 infos à retenir** | En tête de l'accueil, le sujet principal de tes trois premières rubriques. |
-| 🎯 **Rubriques au choix** | IA, Tech, Politique, Actualités, Économie : sélection au premier lancement, modifiable à tout moment. |
-| 🔠 **Confort de lecture** | 5 tailles de texte (17 à 26 px), typographie serif Newsreader, thème clair, sombre ou automatique, avec un bouton soleil/lune dans l'en-tête. |
-| 📲 **Installable** | PWA : icône sur l'écran d'accueil, plein écran, aucune boutique d'applications nécessaire. |
-| ✈️ **Hors ligne** | Le dernier brief reste lisible sans réseau (service worker + `localStorage`). |
-| 👆 **Pensée pour le pouce** | Onglets en haut, glisser à gauche ou à droite pour changer de rubrique, partage natif d'une info. |
-| 🌍 **Bilingue** | Interface et résumés en français ou en anglais, bascule FR/EN en un geste depuis l'en-tête, sources adaptées à chaque langue. |
-| 🔒 **Sans compte, sans pistage** | Aucune inscription, aucun cookie publicitaire : les préférences restent sur ton téléphone. |
+| **Brief par rubrique** | Les 6 sujets les plus importants des dernières 48 heures, dédoublonnés entre médias et classés par importance. |
+| **Format court** | Titre clair, l'essentiel en 2 phrases, « Pourquoi ça compte », « À placer en société ». |
+| **Les 3 infos à retenir** | En tête de l'accueil, le sujet principal de tes trois premières rubriques. |
+| **Rubriques au choix** | IA, Tech, Politique, Actualités, Économie : sélection au premier lancement, modifiable à tout moment. |
+| **Confort de lecture** | 5 tailles de texte (18 à 27 px, agrandies sur PC), typographie serif Newsreader, thème clair, sombre ou automatique, avec un bouton soleil/lune dans l'en-tête. |
+| **Installable** | PWA : icône sur l'écran d'accueil, plein écran, aucune boutique d'applications nécessaire. |
+| **Hors ligne** | Le dernier brief reste lisible sans réseau (service worker + `localStorage`). |
+| **Pensée pour le pouce** | Onglets en haut, glisser à gauche ou à droite pour changer de rubrique, partage natif d'une info. |
+| **Bilingue** | Interface et résumés en français ou en anglais, bascule FR/EN en un geste depuis l'en-tête, sources adaptées à chaque langue. |
+| **Sans compte, sans pistage** | Aucune inscription, aucun cookie publicitaire : les préférences restent sur ton téléphone. |
 
 ## Comment ça marche
 
@@ -81,7 +81,7 @@ Sans clé API, l'app fonctionne en **mode dépêches** : elle affiche les dernie
 | --- | --- |
 | Framework | [Next.js 16](https://nextjs.org) (App Router, Turbopack), React 19 |
 | Langage | TypeScript (strict) |
-| Style | Tailwind CSS v4, polices Newsreader et Inter via `next/font` |
+| Style | Tailwind CSS v4, polices Newsreader (texte) et Libre Franklin (titres de rubrique) via `next/font` |
 | IA | [Claude API](https://docs.claude.com) via `@anthropic-ai/sdk`, sorties structurées + Zod, repli serveur en cas de refus |
 | Données | `rss-parser`, cache `unstable_cache` de Next.js |
 | i18n | `next-intl` (`/fr`, `/en`) |
@@ -170,7 +170,7 @@ public/sw.js               # service worker
 
 ## Choix de conception
 
-- **Lisibilité d'abord** : palette « papier journal » chaude plutôt qu'un blanc clinique, serif à graisse optique pour les textes, taille de texte réglable appliquée à tout le contenu en `em`.
+- **Lisibilité d'abord** : mise en page de journal (double filet, filets fins, petites capitales) plutôt que des cartes arrondies. Papier crème et encre brun-noir, jamais de noir pur sur blanc pur ; mode sombre chaud sans noir absolu. Texte de 20 px par défaut sur mobile, environ 24 px sur grand écran, largeur de ligne limitée.
 - **Pas de base de données** : un lecteur, un téléphone. Les préférences et le dernier brief vivent en `localStorage`, le serveur ne garde qu'un cache.
 - **Coût maîtrisé** : un appel Claude par rubrique et par langue au plus toutes les heures, et seulement si quelqu'un ouvre l'app.
 - **Fidélité aux sources** : le prompt interdit d'inventer, chaque sujet renvoie vers les articles d'origine.

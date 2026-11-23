@@ -11,8 +11,8 @@ An installable mobile app (iPhone and Android) that sums up the day's essential 
 [![Next.js](https://img.shields.io/badge/Next.js-16-000?logo=nextdotjs)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
-[![Claude API](https://img.shields.io/badge/Claude_API-Anthropic-c8371d)](https://docs.claude.com)
-[![PWA](https://img.shields.io/badge/PWA-installable-5a0fc8?logo=pwa)](https://web.dev/progressive-web-apps/)
+[![Claude API](https://img.shields.io/badge/Claude_API-Anthropic-9e3b2a)](https://docs.claude.com)
+[![PWA](https://img.shields.io/badge/PWA-installable-6b6257?logo=pwa)](https://web.dev/progressive-web-apps/)
 [![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000?logo=vercel)](https://rianews.vercel.app)
 [![MIT License](https://img.shields.io/badge/License-MIT-green)](./LICENSE)
 
@@ -46,16 +46,16 @@ Two minutes of reading in the morning, and you know what counts.
 
 | | |
 | --- | --- |
-| 📰 **One brief per topic** | The 6 most important stories of the last 48 hours, deduplicated across outlets and ranked by importance. |
-| ⚡ **Short format** | Clear headline, the gist in 2 sentences, "Why it matters", "Conversation starter". |
-| 🥇 **3 things to remember** | At the top of the home page, the lead story of your first three topics. |
-| 🎯 **Pick your topics** | AI, Tech, Politics, News, Economy: chosen on first launch, editable at any time. |
-| 🔠 **Reading comfort** | 5 text sizes (17 to 26 px), Newsreader serif typography, light, dark or automatic theme, with a sun/moon button in the header. |
-| 📲 **Installable** | PWA: home screen icon, full screen, no app store needed. |
-| ✈️ **Offline** | The last brief stays readable without a connection (service worker + `localStorage`). |
-| 👆 **Thumb-friendly** | Tabs at the top, swipe left or right to switch topic, native share. |
-| 🌍 **Bilingual** | Interface and summaries in French or English, one-tap FR/EN switch in the header, sources suited to each language. |
-| 🔒 **No account, no tracking** | No sign-up, no ad cookies: your preferences stay on your phone. |
+| **One brief per topic** | The 6 most important stories of the last 48 hours, deduplicated across outlets and ranked by importance. |
+| **Short format** | Clear headline, the gist in 2 sentences, "Why it matters", "Conversation starter". |
+| **3 things to remember** | At the top of the home page, the lead story of your first three topics. |
+| **Pick your topics** | AI, Tech, Politics, News, Economy: chosen on first launch, editable at any time. |
+| **Reading comfort** | 5 text sizes (18 to 27 px, larger on desktop), Newsreader serif typography, light, dark or automatic theme, with a sun/moon button in the header. |
+| **Installable** | PWA: home screen icon, full screen, no app store needed. |
+| **Offline** | The last brief stays readable without a connection (service worker + `localStorage`). |
+| **Thumb-friendly** | Tabs at the top, swipe left or right to switch topic, native share. |
+| **Bilingual** | Interface and summaries in French or English, one-tap FR/EN switch in the header, sources suited to each language. |
+| **No account, no tracking** | No sign-up, no ad cookies: your preferences stay on your phone. |
 
 ## How it works
 
@@ -81,7 +81,7 @@ Without an API key, the app runs in **headlines mode**: latest headlines with th
 | --- | --- |
 | Framework | [Next.js 16](https://nextjs.org) (App Router, Turbopack), React 19 |
 | Language | TypeScript (strict) |
-| Styling | Tailwind CSS v4, Newsreader and Inter fonts via `next/font` |
+| Styling | Tailwind CSS v4, Newsreader (body) and Libre Franklin (section labels) fonts via `next/font` |
 | AI | [Claude API](https://docs.claude.com) via `@anthropic-ai/sdk`, structured outputs + Zod, server-side fallback on refusals |
 | Data | `rss-parser`, Next.js `unstable_cache` |
 | i18n | `next-intl` (`/fr`, `/en`) |
@@ -170,7 +170,7 @@ public/sw.js               # service worker
 
 ## Design choices
 
-- **Readability first**: a warm "newsprint" palette instead of clinical white, an optical-size serif for body text, adjustable text size applied to all content in `em`.
+- **Readability first**: a newspaper layout (double rule, hairlines, small caps) instead of rounded cards. Cream paper and brown-black ink, never pure black on pure white; a warm dark mode with no absolute black. 20 px text by default on mobile, about 24 px on large screens, limited line length.
 - **No database**: one reader, one phone. Preferences and the last brief live in `localStorage`; the server only keeps a cache.
 - **Controlled cost**: at most one Claude call per topic and language per hour, and only when someone opens the app.
 - **Faithful to sources**: the prompt forbids making things up, and every story links back to the original articles.

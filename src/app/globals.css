@@ -2,41 +2,45 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+ * Palette « papier et encre » : fond crème doux, encre brun-noir (jamais de noir pur
+ * sur blanc pur), accent brique, couleurs de rubrique désaturées. Contrastes AA ou mieux.
+ */
 :root {
-  --background: #f8f4ec;
-  --surface: #fffdf8;
-  --surface-muted: #f1ebdf;
-  --foreground: #1d1a16;
-  --foreground-muted: #6b6359;
-  --border: #e5ddcf;
-  --accent: #c8371d;
-  --accent-soft: #fbe9e3;
-  --accent-foreground: #fff8f4;
-  --cat-ia: #0f766e;
-  --cat-tech: #1d5fd1;
-  --cat-politique: #b4232a;
-  --cat-actu: #b45309;
-  --cat-eco: #15803d;
-  --reading-size: 19px;
-  --shadow-card: 0 1px 2px rgb(60 40 20 / 0.05), 0 8px 24px -12px rgb(60 40 20 / 0.18);
+  --background: #f5f0e6;
+  --surface: #faf6ee;
+  --surface-muted: #ebe4d6;
+  --foreground: #2a2520;
+  --foreground-muted: #6b6257;
+  --border: #ddd4c4;
+  --rule: #2a2520;
+  --accent: #9e3b2a;
+  --accent-soft: #f0e2d6;
+  --accent-foreground: #fbf6ee;
+  --cat-ia: #2f6f6a;
+  --cat-tech: #3d5a80;
+  --cat-politique: #8e3b46;
+  --cat-actu: #8f6418;
+  --cat-eco: #4e7a3e;
+  --reading-size: 20px;
 }
 
 .dark {
-  --background: #15120e;
-  --surface: #1f1b16;
-  --surface-muted: #2a251e;
-  --foreground: #f3ede2;
-  --foreground-muted: #a69d8f;
-  --border: #352f27;
-  --accent: #ff6b4a;
-  --accent-soft: #3a211a;
-  --accent-foreground: #1f0a04;
-  --cat-ia: #4fd1c0;
-  --cat-tech: #7aa7ff;
-  --cat-politique: #ff7a80;
-  --cat-actu: #f5b25b;
-  --cat-eco: #6fd69a;
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 30px -14px rgb(0 0 0 / 0.6);
+  --background: #1c1a17;
+  --surface: #22201c;
+  --surface-muted: #2b2823;
+  --foreground: #e6dfd3;
+  --foreground-muted: #a39a8c;
+  --border: #3a362f;
+  --rule: #cfc6b8;
+  --accent: #e08a6f;
+  --accent-soft: #3a2a23;
+  --accent-foreground: #1c1a17;
+  --cat-ia: #85bdb5;
+  --cat-tech: #98b2d6;
+  --cat-politique: #d9939b;
+  --cat-actu: #d8b06a;
+  --cat-eco: #a3c793;
 }
 
 @theme inline {
@@ -46,17 +50,18 @@
   --color-foreground: var(--foreground);
   --color-foreground-muted: var(--foreground-muted);
   --color-border: var(--border);
+  --color-rule: var(--rule);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-accent-foreground: var(--accent-foreground);
   --font-serif: var(--font-newsreader), Georgia, "Times New Roman", serif;
-  --font-sans: var(--font-inter), -apple-system, system-ui, sans-serif;
-  --shadow-card: var(--shadow-card);
+  --font-sans: var(--font-franklin), "Helvetica Neue", Arial, sans-serif;
 }
 
 html {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
+  text-rendering: optimizeLegibility;
 }
 
 body {
@@ -64,15 +69,45 @@ body {
   color: var(--color-foreground);
   font-family: var(--font-sans);
   overscroll-behavior-y: none;
+  font-kerning: normal;
 }
 
+::selection {
+  background: var(--accent-soft);
+}
+
+/* Taille de lecture réglable, un peu plus grande sur grand écran. */
 .reading {
   font-size: var(--reading-size);
+}
+@media (min-width: 768px) {
+  .reading {
+    font-size: calc(var(--reading-size) * 1.1);
+  }
+}
+@media (min-width: 1024px) {
+  .reading {
+    font-size: calc(var(--reading-size) * 1.18);
+  }
 }
 
 .serif {
   font-family: var(--font-serif);
   font-optical-sizing: auto;
+}
+
+/* Petites capitales façon rubrique de journal */
+.kicker {
+  font-family: var(--font-sans);
+  font-size: 0.7em;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.hyphens {
+  hyphens: auto;
+  -webkit-hyphens: auto;
 }
 
 .no-scrollbar {
@@ -89,49 +124,26 @@ body {
   padding-bottom: max(env(safe-area-inset-bottom), 1rem);
 }
 
-/* Grain léger façon papier */
-.paper::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.35;
-  background-image: radial-gradient(rgb(120 90 50 / 0.07) 1px, transparent 1px);
-  background-size: 3px 3px;
-}
-.dark .paper::before {
-  opacity: 0.25;
-  background-image: radial-gradient(rgb(255 240 220 / 0.05) 1px, transparent 1px);
+/* Double filet sous le titre du journal */
+.masthead-rule {
+  border-bottom: 3px double var(--rule);
 }
 
-@keyframes shimmer {
-  100% {
-    transform: translateX(100%);
+@keyframes pulse-soft {
+  50% {
+    opacity: 0.45;
   }
 }
 .skeleton {
-  position: relative;
-  overflow: hidden;
   background: var(--surface-muted);
-  border-radius: 0.5rem;
-}
-.skeleton::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  transform: translateX(-100%);
-  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.35), transparent);
-  animation: shimmer 1.4s infinite;
-}
-.dark .skeleton::after {
-  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.06), transparent);
+  border-radius: 3px;
+  animation: pulse-soft 1.6s ease-in-out infinite;
 }
 
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -139,7 +151,7 @@ body {
   }
 }
 .rise {
-  animation: rise 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: rise 0.4s ease-out both;
 }
 
 @keyframes sheet-in {
@@ -151,7 +163,7 @@ body {
   }
 }
 .sheet-in {
-  animation: sheet-in 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: sheet-in 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 @keyframes fade-in {
   from {
@@ -166,7 +178,7 @@ body {
   .rise,
   .sheet-in,
   .fade-in,
-  .skeleton::after {
+  .skeleton {
     animation: none;
   }
 }

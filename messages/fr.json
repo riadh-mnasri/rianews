@@ -31,7 +31,7 @@
     "why": "Pourquoi ça compte",
     "toDrop": "À placer en société",
     "sources": "Sources",
-    "seeMore": "Voir la rubrique",
+    "seeMore": "Toute la rubrique",
     "rawMode": "Mode dépêches : ajoute une clé API Anthropic pour obtenir les résumés.",
     "loadError": "Impossible de charger cette rubrique pour le moment.",
     "retry": "Réessayer",
@@ -45,7 +45,11 @@
     "copied": "Copié !",
     "darkMode": "Passer en mode sombre",
     "lightMode": "Passer en mode clair",
-    "switchLanguage": "Switch to English"
+    "switchLanguage": "Switch to English",
+    "homeTitle": "Ce qu'il faut savoir",
+    "editionMorning": "Édition du matin",
+    "editionAfternoon": "Édition de l'après-midi",
+    "editionEvening": "Édition du soir"
   },
   "onboarding": {
     "title": "Ton brief, à ta façon",

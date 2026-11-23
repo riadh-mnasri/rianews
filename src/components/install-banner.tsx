@@ -46,12 +46,12 @@ export function InstallBanner() {
 
   return (
     <div className="pb-safe fixed inset-x-0 bottom-0 z-30 px-4">
-      <div className="sheet-in mx-auto flex max-w-md items-start gap-3 rounded-3xl border border-border/70 bg-surface/95 p-4 shadow-2xl backdrop-blur-xl">
-        <span className="serif flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent text-xl font-bold text-accent-foreground">
+      <div className="sheet-in mx-auto flex max-w-md items-start gap-3 border-t-[3px] border-rule bg-surface p-4 shadow-[0_8px_32px_rgb(0_0_0/0.16)]">
+        <span className="serif flex h-11 w-11 shrink-0 items-center justify-center rounded-[0.6rem] bg-accent text-xl font-bold text-accent-foreground">
           R
         </span>
         <div className="min-w-0 flex-1">
-          <p className="font-semibold">{t("title")}</p>
+          <p className="serif text-[1.1rem] font-semibold">{t("title")}</p>
           <p className="mt-0.5 text-sm leading-snug text-foreground-muted">
             {mode === "ios" ? (
               <>
@@ -70,7 +70,7 @@ export function InstallBanner() {
                 await promptEvent.prompt();
                 setMode(null);
               }}
-              className="mt-3 rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground active:scale-95"
+              className="mt-3 bg-foreground px-4 py-2 text-sm font-semibold text-background active:scale-95"
             >
               {t("button")}
             </button>
@@ -80,7 +80,7 @@ export function InstallBanner() {
           type="button"
           onClick={dismiss}
           aria-label={t("dismiss")}
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-foreground-muted active:scale-90"
+          className="flex h-8 w-8 shrink-0 items-center justify-center text-foreground-muted active:scale-90"
         >
           <X className="h-4 w-4" />
         </button>
