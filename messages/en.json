@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "title": "L'Essentiel: the news that matters, in two minutes",
+    "description": "The latest news that matters in AI, tech, politics, world news and the economy, summed up in a few lines and easy to read on mobile."
+  },
+  "categories": {
+    "ia": "AI",
+    "tech": "Tech",
+    "politique": "Politics",
+    "actu": "News",
+    "eco": "Economy"
+  },
+  "categoryHints": {
+    "ia": "Models, start-ups, regulation",
+    "tech": "Digital, products, cybersecurity",
+    "politique": "Government, parliament, elections",
+    "actu": "World and local",
+    "eco": "Business, markets, jobs"
+  },
+  "home": {
+    "greetingMorning": "Good morning",
+    "greetingAfternoon": "Good afternoon",
+    "greetingEvening": "Good evening",
+    "subtitle": "Here is what you need to know today.",
+    "all": "Top stories",
+    "topThree": "3 things to remember",
+    "readingTime": "{minutes} min read",
+    "updated": "Updated {time}",
+    "refresh": "Refresh",
+    "settings": "Settings",
+    "why": "Why it matters",
+    "toDrop": "Conversation starter",
+    "sources": "Sources",
+    "seeMore": "Open section",
+    "rawMode": "Headlines mode: add an Anthropic API key to get summaries.",
+    "loadError": "This section can't be loaded right now.",
+    "retry": "Try again",
+    "emptyTitle": "Nothing new here",
+    "emptyText": "No recent stories in this section. Check back a little later.",
+    "noInterestTitle": "Pick your interests",
+    "noInterestText": "Select at least one section to build your brief.",
+    "chooseInterests": "Choose my sections",
+    "offline": "Offline: you are reading the last saved version.",
+    "share": "Share",
+    "copied": "Copied!"
+  },
+  "onboarding": {
+    "title": "Your brief, your way",
+    "text": "Pick the topics you care about. You can change them at any time.",
+    "start": "Let's go",
+    "pickOne": "Pick at least one section"
+  },
+  "settings": {
+    "title": "Settings",
+    "interests": "My sections",
+    "textSize": "Text size",
+    "theme": "Appearance",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "Auto",
+    "language": "Language",
+    "close": "Close",
+    "preview": "Easy reading, no squinting."
+  },
+  "install": {
+    "title": "Install L'Essentiel",
+    "android": "Add the app to your home screen to open it in one tap.",
+    "button": "Install",
+    "dismiss": "Later",
+    "iosBefore": "Tap",
+    "iosAfter": "then “Add to Home Screen”."
+  },
+  "time": {
+    "justNow": "just now",
+    "minutes": "{n} min ago",
+    "hours": "{n} h ago",
+    "days": "{n} d ago"
+  },
+  "footer": {
+    "madeBy": "Built by Riadh MNASRI",
+    "disclaimer": "Summaries are generated automatically from the feeds of the outlets cited. Check the source before quoting a figure."
+  }
+}

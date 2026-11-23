@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "title": "L'Essentiel : l'actu qui compte, en deux minutes",
+    "description": "Les dernières infos qui comptent en IA, tech, politique, actualité et économie, résumées en quelques lignes et faciles à lire sur mobile."
+  },
+  "categories": {
+    "ia": "IA",
+    "tech": "Tech",
+    "politique": "Politique",
+    "actu": "Actualités",
+    "eco": "Économie"
+  },
+  "categoryHints": {
+    "ia": "Modèles, start-up, régulation",
+    "tech": "Numérique, produits, cybersécurité",
+    "politique": "Gouvernement, Parlement, élections",
+    "actu": "France et monde",
+    "eco": "Entreprises, marchés, emploi"
+  },
+  "home": {
+    "greetingMorning": "Bonjour",
+    "greetingAfternoon": "Bon après-midi",
+    "greetingEvening": "Bonsoir",
+    "subtitle": "Voici ce qu'il faut savoir aujourd'hui.",
+    "all": "À la une",
+    "topThree": "Les 3 infos à retenir",
+    "readingTime": "{minutes} min de lecture",
+    "updated": "Mis à jour {time}",
+    "refresh": "Actualiser",
+    "settings": "Réglages",
+    "why": "Pourquoi ça compte",
+    "toDrop": "À placer en société",
+    "sources": "Sources",
+    "seeMore": "Voir la rubrique",
+    "rawMode": "Mode dépêches : ajoute une clé API Anthropic pour obtenir les résumés.",
+    "loadError": "Impossible de charger cette rubrique pour le moment.",
+    "retry": "Réessayer",
+    "emptyTitle": "Rien de neuf ici",
+    "emptyText": "Aucune dépêche récente dans cette rubrique. Repasse un peu plus tard.",
+    "noInterestTitle": "Choisis tes centres d'intérêt",
+    "noInterestText": "Sélectionne au moins une rubrique pour composer ton brief.",
+    "chooseInterests": "Choisir mes rubriques",
+    "offline": "Hors ligne : tu lis la dernière version enregistrée.",
+    "share": "Partager",
+    "copied": "Copié !"
+  },
+  "onboarding": {
+    "title": "Ton brief, à ta façon",
+    "text": "Choisis les sujets qui t'intéressent. Tu pourras les changer à tout moment.",
+    "start": "C'est parti",
+    "pickOne": "Choisis au moins une rubrique"
+  },
+  "settings": {
+    "title": "Réglages",
+    "interests": "Mes rubriques",
+    "textSize": "Taille du texte",
+    "theme": "Apparence",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Auto",
+    "language": "Langue",
+    "close": "Fermer",
+    "preview": "Un texte bien lisible, sans effort."
+  },
+  "install": {
+    "title": "Installe L'Essentiel",
+    "android": "Ajoute l'app à ton écran d'accueil pour l'ouvrir en un geste.",
+    "button": "Installer",
+    "dismiss": "Plus tard",
+    "iosBefore": "Touche",
+    "iosAfter": "puis « Sur l'écran d'accueil »."
+  },
+  "time": {
+    "justNow": "à l'instant",
+    "minutes": "il y a {n} min",
+    "hours": "il y a {n} h",
+    "days": "il y a {n} j"
+  },
+  "footer": {
+    "madeBy": "Conçu par Riadh MNASRI",
+    "disclaimer": "Résumés générés automatiquement à partir des flux des médias cités. Vérifie la source avant de citer un chiffre."
+  }
+}

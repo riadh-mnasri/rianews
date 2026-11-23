@@ -1,26 +1,172 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8f4ec;
+  --surface: #fffdf8;
+  --surface-muted: #f1ebdf;
+  --foreground: #1d1a16;
+  --foreground-muted: #6b6359;
+  --border: #e5ddcf;
+  --accent: #c8371d;
+  --accent-soft: #fbe9e3;
+  --accent-foreground: #fff8f4;
+  --cat-ia: #0f766e;
+  --cat-tech: #1d5fd1;
+  --cat-politique: #b4232a;
+  --cat-actu: #b45309;
+  --cat-eco: #15803d;
+  --reading-size: 19px;
+  --shadow-card: 0 1px 2px rgb(60 40 20 / 0.05), 0 8px 24px -12px rgb(60 40 20 / 0.18);
+}
+
+.dark {
+  --background: #15120e;
+  --surface: #1f1b16;
+  --surface-muted: #2a251e;
+  --foreground: #f3ede2;
+  --foreground-muted: #a69d8f;
+  --border: #352f27;
+  --accent: #ff6b4a;
+  --accent-soft: #3a211a;
+  --accent-foreground: #1f0a04;
+  --cat-ia: #4fd1c0;
+  --cat-tech: #7aa7ff;
+  --cat-politique: #ff7a80;
+  --cat-actu: #f5b25b;
+  --cat-eco: #6fd69a;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 30px -14px rgb(0 0 0 / 0.6);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-foreground: var(--accent-foreground);
+  --font-serif: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), -apple-system, system-ui, sans-serif;
+  --shadow-card: var(--shadow-card);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  overscroll-behavior-y: none;
+}
+
+.reading {
+  font-size: var(--reading-size);
+}
+
+.serif {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+.pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+}
+
+/* Grain léger façon papier */
+.paper::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+  background-image: radial-gradient(rgb(120 90 50 / 0.07) 1px, transparent 1px);
+  background-size: 3px 3px;
+}
+.dark .paper::before {
+  opacity: 0.25;
+  background-image: radial-gradient(rgb(255 240 220 / 0.05) 1px, transparent 1px);
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-muted);
+  border-radius: 0.5rem;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.35), transparent);
+  animation: shimmer 1.4s infinite;
+}
+.dark .skeleton::after {
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.06), transparent);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise {
+  animation: rise 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+.sheet-in {
+  animation: sheet-in 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+.fade-in {
+  animation: fade-in 0.25s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .sheet-in,
+  .fade-in,
+  .skeleton::after {
+    animation: none;
+  }
 }
