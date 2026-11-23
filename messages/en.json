@@ -42,7 +42,10 @@
     "chooseInterests": "Choose my sections",
     "offline": "Offline: you are reading the last saved version.",
     "share": "Share",
-    "copied": "Copied!"
+    "copied": "Copied!",
+    "darkMode": "Switch to dark mode",
+    "lightMode": "Switch to light mode",
+    "switchLanguage": "Passer en français"
   },
   "onboarding": {
     "title": "Your brief, your way",

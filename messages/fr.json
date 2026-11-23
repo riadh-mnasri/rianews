@@ -42,7 +42,10 @@
     "chooseInterests": "Choisir mes rubriques",
     "offline": "Hors ligne : tu lis la dernière version enregistrée.",
     "share": "Partager",
-    "copied": "Copié !"
+    "copied": "Copié !",
+    "darkMode": "Passer en mode sombre",
+    "lightMode": "Passer en mode clair",
+    "switchLanguage": "Switch to English"
   },
   "onboarding": {
     "title": "Ton brief, à ta façon",

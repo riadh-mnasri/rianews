@@ -6,6 +6,6 @@ import { generateBrief } from "@/lib/brief";
 // Un brief par rubrique et par langue, régénéré au plus toutes les heures.
 export const getCachedBrief = unstable_cache(
   async (category: CategoryId, locale: "fr" | "en") => generateBrief(category, locale),
-  ["rianews-brief-v1"],
+  ["rianews-brief-v2"],
   { revalidate: 3600 },
 );

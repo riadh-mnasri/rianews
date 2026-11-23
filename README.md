@@ -50,11 +50,11 @@ Deux minutes de lecture le matin, et tu sais l'essentiel.
 | ⚡ **Format court** | Titre clair, l'essentiel en 2 phrases, « Pourquoi ça compte », « À placer en société ». |
 | 🥇 **Les 3 infos à retenir** | En tête de l'accueil, le sujet principal de tes trois premières rubriques. |
 | 🎯 **Rubriques au choix** | IA, Tech, Politique, Actualités, Économie : sélection au premier lancement, modifiable à tout moment. |
-| 🔠 **Confort de lecture** | 5 tailles de texte (17 à 26 px), typographie serif Newsreader, thème clair, sombre ou automatique. |
+| 🔠 **Confort de lecture** | 5 tailles de texte (17 à 26 px), typographie serif Newsreader, thème clair, sombre ou automatique, avec un bouton soleil/lune dans l'en-tête. |
 | 📲 **Installable** | PWA : icône sur l'écran d'accueil, plein écran, aucune boutique d'applications nécessaire. |
 | ✈️ **Hors ligne** | Le dernier brief reste lisible sans réseau (service worker + `localStorage`). |
 | 👆 **Pensée pour le pouce** | Onglets en haut, glisser à gauche ou à droite pour changer de rubrique, partage natif d'une info. |
-| 🌍 **Bilingue** | Interface et résumés en français ou en anglais, avec des sources adaptées à chaque langue. |
+| 🌍 **Bilingue** | Interface et résumés en français ou en anglais, bascule FR/EN en un geste depuis l'en-tête, sources adaptées à chaque langue. |
 | 🔒 **Sans compte, sans pistage** | Aucune inscription, aucun cookie publicitaire : les préférences restent sur ton téléphone. |
 
 ## Comment ça marche

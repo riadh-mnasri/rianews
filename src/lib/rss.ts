@@ -1,6 +1,6 @@
 // © 2026 Riadh MNASRI
 import Parser from "rss-parser";
-import { FEEDS, type CategoryId } from "@/data/categories";
+import { FEEDS, type CategoryId, type Feed } from "@/data/categories";
 import type { RawItem } from "@/lib/types";
 
 const parser = new Parser();
@@ -23,7 +23,7 @@ function cleanExcerpt(value: string | undefined): string | null {
   return text.length > 320 ? `${text.slice(0, 317).trimEnd()}…` : text;
 }
 
-async function fetchFeed(url: string, label: string): Promise<RawItem[]> {
+async function fetchFeed({ url, label, foreign }: Feed): Promise<RawItem[]> {
   try {
     const res = await fetch(url, {
       headers: { "User-Agent": "Mozilla/5.0 (compatible; RiaNews/1.0)" },
@@ -53,6 +53,7 @@ async function fetchFeed(url: string, label: string): Promise<RawItem[]> {
           source,
           publishedAt: item.isoDate ?? null,
           excerpt: isGoogle ? null : cleanExcerpt(item.contentSnippet ?? item.summary),
+          foreign,
         },
       ];
     });
@@ -66,7 +67,7 @@ export async function fetchCategoryItems(
   locale: "fr" | "en",
 ): Promise<RawItem[]> {
   const feeds = FEEDS[locale][category];
-  const batches = await Promise.all(feeds.map((f) => fetchFeed(f.url, f.label)));
+  const batches = await Promise.all(feeds.map(fetchFeed));
   const now = Date.now();
   const seen = new Set<string>();
 

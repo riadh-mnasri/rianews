@@ -7,6 +7,7 @@ export type RawItem = {
   source: string;
   publishedAt: string | null;
   excerpt: string | null;
+  foreign?: boolean;
 };
 
 export type Story = {

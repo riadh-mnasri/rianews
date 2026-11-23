@@ -13,6 +13,7 @@ import { SettingsSheet } from "@/components/settings-sheet";
 import { Onboarding } from "@/components/onboarding";
 import { InstallBanner } from "@/components/install-banner";
 import { Logo } from "@/components/logo";
+import { LocaleToggle, ThemeToggle } from "@/components/header-toggles";
 import { useTimeAgo } from "@/components/time-ago";
 import { useClientValue, useOnline } from "@/lib/client-values";
 
@@ -188,14 +189,16 @@ export function AppShell() {
       {!prefs.onboarded && <Onboarding />}
 
       <header className="pt-safe sticky top-0 z-20 border-b border-border/60 bg-background/80 backdrop-blur-xl backdrop-saturate-150">
-        <div className="mx-auto flex max-w-2xl items-center justify-between px-5 py-3">
+        <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-3 sm:px-5">
           <Logo />
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-0.5">
+            <LocaleToggle />
+            <ThemeToggle />
             <button
               type="button"
               onClick={refresh}
               aria-label={t("refresh")}
-              className="flex h-10 w-10 items-center justify-center rounded-full text-foreground-muted transition-all hover:bg-surface-muted hover:text-foreground active:scale-90"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-foreground-muted transition-all hover:bg-surface-muted hover:text-foreground active:scale-90"
             >
               <RefreshCw className={`h-[1.15rem] w-[1.15rem] ${anyLoading ? "animate-spin" : ""}`} />
             </button>
@@ -203,7 +206,7 @@ export function AppShell() {
               type="button"
               onClick={() => setSettingsOpen(true)}
               aria-label={t("settings")}
-              className="flex h-10 w-10 items-center justify-center rounded-full text-foreground-muted transition-all hover:bg-surface-muted hover:text-foreground active:scale-90"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-foreground-muted transition-all hover:bg-surface-muted hover:text-foreground active:scale-90"
             >
               <Settings2 className="h-[1.15rem] w-[1.15rem]" />
             </button>

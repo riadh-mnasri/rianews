@@ -3,7 +3,8 @@
 export const CATEGORY_IDS = ["ia", "tech", "politique", "actu", "eco"] as const;
 export type CategoryId = (typeof CATEGORY_IDS)[number];
 
-export type Feed = { url: string; label: string };
+// `foreign` : flux dans une autre langue que la locale (utilisé seulement quand Claude traduit).
+export type Feed = { url: string; label: string; foreign?: boolean };
 
 export function isCategoryId(value: string): value is CategoryId {
   return (CATEGORY_IDS as readonly string[]).includes(value);
@@ -20,7 +21,7 @@ export const FEEDS: Record<"fr" | "en", Record<CategoryId, Feed[]>> = {
       { url: gnews("search?q=intelligence+artificielle+when:2d", "fr"), label: "Google Actualités" },
       { url: "https://www.actuia.com/feed/", label: "ActuIA" },
       { url: "https://www.lemonde.fr/pixels/rss_full.xml", label: "Le Monde Pixels" },
-      { url: "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml", label: "The Verge" },
+      { url: "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml", label: "The Verge", foreign: true },
     ],
     tech: [
       { url: gnews("headlines/section/topic/TECHNOLOGY", "fr"), label: "Google Actualités" },

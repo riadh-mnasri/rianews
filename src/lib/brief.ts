@@ -63,7 +63,7 @@ Consignes :
 }
 
 function rawBrief(items: RawItem[], category: CategoryId, locale: string): Brief {
-  const stories: Story[] = items.slice(0, 10).map((item, i) => ({
+  const stories: Story[] = items.filter((item) => !item.foreign).slice(0, 10).map((item, i) => ({
     id: `${category}-raw-${i}`,
     title: item.title,
     essentiel: item.excerpt ?? "",

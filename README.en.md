@@ -50,11 +50,11 @@ Two minutes of reading in the morning, and you know what counts.
 | ⚡ **Short format** | Clear headline, the gist in 2 sentences, "Why it matters", "Conversation starter". |
 | 🥇 **3 things to remember** | At the top of the home page, the lead story of your first three topics. |
 | 🎯 **Pick your topics** | AI, Tech, Politics, News, Economy: chosen on first launch, editable at any time. |
-| 🔠 **Reading comfort** | 5 text sizes (17 to 26 px), Newsreader serif typography, light, dark or automatic theme. |
+| 🔠 **Reading comfort** | 5 text sizes (17 to 26 px), Newsreader serif typography, light, dark or automatic theme, with a sun/moon button in the header. |
 | 📲 **Installable** | PWA: home screen icon, full screen, no app store needed. |
 | ✈️ **Offline** | The last brief stays readable without a connection (service worker + `localStorage`). |
 | 👆 **Thumb-friendly** | Tabs at the top, swipe left or right to switch topic, native share. |
-| 🌍 **Bilingual** | Interface and summaries in French or English, with sources suited to each language. |
+| 🌍 **Bilingual** | Interface and summaries in French or English, one-tap FR/EN switch in the header, sources suited to each language. |
 | 🔒 **No account, no tracking** | No sign-up, no ad cookies: your preferences stay on your phone. |
 
 ## How it works
