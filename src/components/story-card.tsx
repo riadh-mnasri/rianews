@@ -40,7 +40,7 @@ export function StoryCard({
 
   return (
     <article
-      className="rise border-t border-border py-7 first:border-t-0 first:pt-2"
+      className="rise article-copy border-t border-border py-7 first:border-t-0 first:pt-2"
       style={{ animationDelay: `${Math.min(index, 6) * 50}ms` }}
     >
       <div className="flex items-baseline gap-3">
@@ -55,11 +55,11 @@ export function StoryCard({
       </h3>
 
       {story.essentiel && (
-        <p className="serif hyphens mt-3 text-[1em] leading-[1.62] text-pretty">{story.essentiel}</p>
+        <p className="serif hyphens mt-3 text-[1em] leading-[1.68] text-pretty">{story.essentiel}</p>
       )}
 
       {story.pourquoi && (
-        <p className="serif hyphens mt-3 text-[0.94em] leading-[1.58] text-foreground-muted">
+        <p className="serif hyphens mt-3 text-[0.94em] leading-[1.65] text-foreground-muted">
           <span className="kicker mr-1.5 text-foreground" style={{ fontSize: "0.74em" }}>
             {t("why")}.
           </span>
@@ -79,7 +79,7 @@ export function StoryCard({
       )}
 
       <div className="mt-5 flex items-center justify-between gap-3">
-        <p className="min-w-0 text-[0.72em] text-foreground-muted">
+        <p className="min-w-0 leading-relaxed text-[0.76em] text-foreground-muted">
           {story.sources.map((source, i) => (
             <span key={source.url}>
               {i > 0 && <span className="mx-1.5 opacity-50">/</span>}
@@ -98,7 +98,7 @@ export function StoryCard({
           type="button"
           onClick={share}
           aria-label={t("share")}
-          className="-mr-2 flex h-9 w-9 shrink-0 items-center justify-center text-foreground-muted transition-colors hover:text-foreground active:scale-90"
+          className="-mr-2 flex size-11 shrink-0 items-center justify-center text-foreground-muted transition-colors hover:text-foreground active:scale-90"
         >
           {copied ? <Check className="h-4 w-4 text-accent" /> : <Share className="h-4 w-4" strokeWidth={1.75} />}
         </button>

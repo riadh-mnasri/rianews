@@ -20,7 +20,7 @@ import { useClientValue, useOnline } from "@/lib/client-values";
 type Tab = "home" | CategoryId;
 
 const iconBtn =
-  "flex h-9 w-9 items-center justify-center text-foreground-muted transition-colors hover:text-foreground active:scale-90";
+  "flex size-11 items-center justify-center text-foreground-muted transition-colors hover:text-foreground active:scale-90";
 
 function useEdition() {
   const t = useTranslations("home");
@@ -148,15 +148,17 @@ export function AppShell() {
 
   function goTo(next: Tab) {
     setTab(next);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+    window.scrollTo({ top: 0, behavior });
     const el = tabsRef.current?.querySelector<HTMLElement>(`[data-tab="${next}"]`);
-    el?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    el?.scrollIntoView({ behavior, inline: "center", block: "nearest" });
   }
 
   function onTouchEnd(e: React.TouchEvent) {
     const start = touch.current;
     touch.current = null;
-    if (!start) return;
+    if (!start || e.touches.length > 0 || e.changedTouches.length !== 1) return;
+    if ((window.visualViewport?.scale ?? 1) > 1) return;
     const dx = e.changedTouches[0].clientX - start.x;
     const dy = e.changedTouches[0].clientY - start.y;
     if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.8) return;
@@ -191,8 +193,8 @@ export function AppShell() {
     <div className="relative min-h-dvh">
       {!prefs.onboarded && <Onboarding />}
 
-      <header className="pt-safe sticky top-0 z-20 bg-background">
-        <div className="masthead-rule mx-auto flex max-w-[46rem] lg:max-w-[50rem] items-center justify-between px-5 pt-3 pb-2.5 md:pt-5 md:pb-3">
+      <header className="pt-safe relative z-20 bg-background md:sticky md:top-0 md:bg-background/95 shadow-[0_4px_16px_rgb(14_23_39/0.04)] md:backdrop-blur-md">
+        <div className="page-gutter mx-auto flex max-w-[72rem] items-center justify-between pt-3 pb-2.5 md:pt-5 md:pb-3">
           <Logo />
           <div className="-mr-2 flex items-center">
             <LocaleToggle />
@@ -205,8 +207,8 @@ export function AppShell() {
             </button>
           </div>
         </div>
-        <nav className="border-b border-border">
-          <div ref={tabsRef} className="no-scrollbar mx-auto flex max-w-[46rem] lg:max-w-[50rem] gap-6 overflow-x-auto px-5">
+        <nav className="border-y border-border">
+          <div ref={tabsRef} className="page-gutter no-scrollbar mx-auto flex max-w-[72rem] gap-5 overflow-x-auto md:gap-6">
             {tabs.map((id) => {
               const active = id === activeTab;
               const color = id === "home" ? "var(--foreground)" : CATEGORY_META[id].color;
@@ -214,9 +216,10 @@ export function AppShell() {
                 <button
                   key={id}
                   data-tab={id}
+                  aria-current={active ? "true" : undefined}
                   type="button"
                   onClick={() => goTo(id)}
-                  className={`relative shrink-0 py-3 text-[0.8rem] font-semibold md:text-[0.9rem] tracking-[0.06em] uppercase transition-colors ${
+                  className={`relative min-h-11 shrink-0 py-3 text-[0.8rem] font-semibold md:text-[0.9rem] tracking-[0.06em] uppercase transition-colors ${
                     active ? "text-foreground" : "text-foreground-muted hover:text-foreground"
                   }`}
                 >
@@ -233,8 +236,11 @@ export function AppShell() {
       </header>
 
       <main
-        className="reading mx-auto max-w-[46rem] lg:max-w-[50rem] px-5 pt-7 pb-16 md:pt-10"
-        onTouchStart={(e) => (touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY })}
+        className="page-gutter reading edition-content mx-auto max-w-[72rem] pt-5 md:pt-10"
+        onTouchStart={(e) => {
+          touch.current = e.touches.length === 1 ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : null;
+        }}
+        onTouchCancel={() => (touch.current = null)}
         onTouchEnd={onTouchEnd}
       >
         {offline && (
@@ -243,20 +249,22 @@ export function AppShell() {
           </p>
         )}
 
-        <div className="mb-7">
-          <p className="kicker text-foreground-muted first-letter:uppercase">
-            {today}
-            {today && activeTab === "home" && <span className="text-accent"> · {edition}</span>}
-          </p>
-          <h1 className="serif mt-2 text-[2.1em] leading-[1.05] font-semibold tracking-[-0.02em]">
-            {activeTab === "home" ? t("homeTitle") : tc(activeTab)}
-          </h1>
-          <p className="mt-2 text-[0.75em] text-foreground-muted">
-            {storyCount > 0 && t("readingTime", { minutes })}
-            {lastUpdate && <> · {t("updated", { time: timeAgo(lastUpdate) ?? "" })}</>}
-            {rawMode && <span className="block pt-1 opacity-80">{t("rawMode")}</span>}
-          </p>
+        <div className="edition-banner mb-6 rounded-2xl px-5 py-7 md:mb-8 md:px-12 md:py-14">
+          <div className="relative max-w-2xl">
+            <p className="kicker text-[#f1c995] first-letter:uppercase">
+              {today}
+              {today && activeTab === "home" && <span> · {edition}</span>}
+            </p>
+            <h1 className="serif mt-3 text-[1.95em] leading-[0.98] font-semibold tracking-[-0.035em] text-balance md:text-[3em]">
+              {activeTab === "home" ? t("homeTitle") : tc(activeTab)}
+            </h1>
+            <p className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-[0.72em] text-[#d8dce5] empty:hidden">
+              {storyCount > 0 && <span>{t("readingTime", { minutes })}</span>}
+              {lastUpdate && <span>{t("updated", { time: timeAgo(lastUpdate) ?? "" })}</span>}
+            </p>
+          </div>
         </div>
+        {rawMode && <p className="mb-6 text-[0.7em] text-foreground-muted">{t("rawMode")}</p>}
 
         {interests.length === 0 ? (
           <EmptyState
@@ -268,25 +276,25 @@ export function AppShell() {
         ) : activeTab === "home" ? (
           <div className="space-y-12">
             {topThree.length > 0 && (
-              <section className="rise border-t-[3px] border-rule bg-surface-muted/60 px-5 pt-4 pb-5 dark:bg-surface">
+              <section className="rise rounded-xl border border-border bg-surface px-5 pt-5 pb-3 md:px-7 md:pt-6">
                 <h2 className="kicker text-foreground">{t("topThree")}</h2>
-                <ol className="mt-3 divide-y divide-border">
-                  {topThree.map(({ category, story }, i) => (
-                    <li key={story.id}>
+                <ol className="mt-3 grid divide-y divide-border md:auto-cols-fr md:grid-flow-col md:divide-x md:divide-y-0">
+                  {topThree.map(({ category, story }) => (
+                    <li key={category} className="md:px-5 md:first:pl-0 md:last:pr-0">
                       <button
                         type="button"
                         onClick={() => goTo(category)}
-                        className="group flex w-full gap-4 py-3 text-left"
+                        className="group flex h-full w-full items-start justify-between gap-3 py-3 text-left"
                       >
-                        <span className="serif text-[1.5em] leading-none font-medium text-accent tabular-nums">{i + 1}</span>
                         <span className="min-w-0">
-                          <span className="kicker block" style={{ color: CATEGORY_META[category].color, fontSize: "0.62em" }}>
+                          <span className="kicker block" style={{ color: CATEGORY_META[category].color, fontSize: "0.65em" }}>
                             {tc(category)}
                           </span>
-                          <span className="serif mt-0.5 block text-[1.06em] leading-snug font-medium decoration-1 underline-offset-4 group-hover:underline">
+                          <span className="serif mt-0.5 block text-[1.08em] leading-tight font-semibold decoration-1 underline-offset-4 group-hover:underline">
                             {story.title}
                           </span>
                         </span>
+                        <ArrowRight aria-hidden="true" className="mt-1 h-4 w-4 shrink-0 text-foreground-muted group-hover:text-accent" />
                       </button>
                     </li>
                   ))}
@@ -294,40 +302,44 @@ export function AppShell() {
               </section>
             )}
 
-            {interests.map((category) => {
-              const meta = CATEGORY_META[category];
-              return (
-                <section key={category}>
-                  <div className="mb-2 flex items-center gap-3">
-                    <h2 className="kicker shrink-0" style={{ color: meta.color, fontSize: "0.78em" }}>
-                      {tc(category)}
-                    </h2>
-                    <span className="h-px flex-1" style={{ background: meta.color, opacity: 0.45 }} />
-                  </div>
-                  <CategoryFeed category={category} state={states[category]} limit={3} onRetry={refresh} />
-                  <button
-                    type="button"
-                    onClick={() => goTo(category)}
-                    className="mt-1 flex items-center gap-1.5 text-[0.75em] font-semibold text-foreground-muted transition-colors hover:text-foreground"
-                  >
-                    {t("seeMore")} <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} />
-                  </button>
-                </section>
-              );
-            })}
+            <div className="mx-auto max-w-[47rem] space-y-12">
+              {interests.map((category) => {
+                const meta = CATEGORY_META[category];
+                return (
+                  <section key={category}>
+                    <div className="mb-2 flex items-center gap-3">
+                      <h2 className="kicker shrink-0" style={{ color: meta.color, fontSize: "0.78em" }}>
+                        {tc(category)}
+                      </h2>
+                      <span className="h-px flex-1" style={{ background: meta.color, opacity: 0.45 }} />
+                    </div>
+                    <CategoryFeed category={category} state={states[category]} limit={3} onRetry={refresh} />
+                    <button
+                      type="button"
+                      onClick={() => goTo(category)}
+                      className="mt-1 flex min-h-11 items-center gap-1.5 text-[0.75em] font-semibold text-foreground-muted transition-colors hover:text-foreground"
+                    >
+                      {t("seeMore")} <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} />
+                    </button>
+                  </section>
+                );
+              })}
+            </div>
           </div>
         ) : (
-          <CategoryFeed key={activeTab} category={activeTab} state={states[activeTab]} onRetry={refresh} />
+          <div className="mx-auto max-w-[47rem]">
+            <CategoryFeed key={activeTab} category={activeTab} state={states[activeTab]} onRetry={refresh} />
+          </div>
         )}
 
         <footer className="mt-16 border-t border-border pt-6 text-[0.68em] leading-relaxed text-foreground-muted">
           <p>{tf("disclaimer")}</p>
           <p className="mt-2">© {new Date().getFullYear()} Riadh MNASRI</p>
         </footer>
+        {prefs.onboarded && !settingsOpen && <InstallBanner />}
       </main>
 
       {settingsOpen && <SettingsSheet onClose={() => setSettingsOpen(false)} />}
-      {prefs.onboarded && !settingsOpen && <InstallBanner />}
     </div>
   );
 }

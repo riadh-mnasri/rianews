@@ -1,6 +1,6 @@
 // © 2026 Riadh MNASRI
 
-export const CATEGORY_IDS = ["ia", "tech", "politique", "actu", "eco"] as const;
+export const CATEGORY_IDS = ["ia", "tech", "politique", "actu", "eco", "bourse"] as const;
 export type CategoryId = (typeof CATEGORY_IDS)[number];
 
 // `foreign` : flux dans une autre langue que la locale (utilisé seulement quand Claude traduit).
@@ -49,6 +49,10 @@ export const FEEDS: Record<"fr" | "en", Record<CategoryId, Feed[]>> = {
       { url: "https://www.lefigaro.fr/rss/figaro_economie.xml", label: "Le Figaro" },
       { url: gnews("headlines/section/topic/BUSINESS", "fr"), label: "Google Actualités" },
     ],
+    bourse: [
+      { url: gnews("search?q=(%22CAC+40%22+OR+%22Euro+Stoxx+50%22+OR+%22Wall+Street%22)+when:2d", "fr"), label: "Google Actualités" },
+      { url: gnews("search?q=(%22résultats+trimestriels%22+OR+%22résultats+annuels%22+OR+%22ETF%22)+bourse+when:2d", "fr"), label: "Google Actualités" },
+    ],
   },
   en: {
     ia: [
@@ -74,6 +78,10 @@ export const FEEDS: Record<"fr" | "en", Record<CategoryId, Feed[]>> = {
     eco: [
       { url: "https://feeds.bbci.co.uk/news/business/rss.xml", label: "BBC" },
       { url: gnews("headlines/section/topic/BUSINESS", "en"), label: "Google News" },
+    ],
+    bourse: [
+      { url: gnews("search?q=(%22S%26P+500%22+OR+%22Nasdaq%22+OR+%22STOXX+600%22)+stock+market+when:2d", "en"), label: "Google News" },
+      { url: gnews("search?q=(%22earnings+report%22+OR+%22earnings+guidance%22+OR+%22ETF%22)+stock+market+when:2d", "en"), label: "Google News" },
     ],
   },
 };

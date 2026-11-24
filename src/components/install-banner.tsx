@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Share, X } from "lucide-react";
+import { IconArt } from "@/lib/icon-art";
 
 type InstallPromptEvent = Event & { prompt: () => Promise<void> };
 const DISMISS_KEY = "rianews-install-dismissed";
@@ -45,11 +46,11 @@ export function InstallBanner() {
   }
 
   return (
-    <div className="pb-safe fixed inset-x-0 bottom-0 z-30 px-4">
-      <div className="sheet-in mx-auto flex max-w-md items-start gap-3 border-t-[3px] border-rule bg-surface p-4 shadow-[0_8px_32px_rgb(0_0_0/0.16)]">
-        <span className="serif flex h-11 w-11 shrink-0 items-center justify-center rounded-[0.6rem] bg-accent text-xl font-bold text-accent-foreground">
-          R
-        </span>
+    <div className="mt-8">
+      <div className="rise mx-auto flex max-w-md items-start gap-3 border-t-[3px] border-rule bg-surface p-4 shadow-[0_8px_32px_rgb(0_0_0/0.16)]">
+        <div className="shrink-0 overflow-hidden rounded-[0.6rem]" aria-hidden="true">
+          <IconArt size={44} />
+        </div>
         <div className="min-w-0 flex-1">
           <p className="serif text-[1.1rem] font-semibold">{t("title")}</p>
           <p className="mt-0.5 text-sm leading-snug text-foreground-muted">
@@ -80,7 +81,7 @@ export function InstallBanner() {
           type="button"
           onClick={dismiss}
           aria-label={t("dismiss")}
-          className="flex h-8 w-8 shrink-0 items-center justify-center text-foreground-muted active:scale-90"
+          className="-mr-2 flex size-11 shrink-0 items-center justify-center text-foreground-muted active:scale-90"
         >
           <X className="h-4 w-4" />
         </button>

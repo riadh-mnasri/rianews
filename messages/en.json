@@ -8,14 +8,16 @@
     "tech": "Tech",
     "politique": "Politics",
     "actu": "News",
-    "eco": "Economy"
+    "eco": "Economy",
+    "bourse": "Markets"
   },
   "categoryHints": {
     "ia": "Models, start-ups, regulation",
     "tech": "Digital, products, cybersecurity",
     "politique": "Government, parliament, elections",
     "actu": "World and local",
-    "eco": "Business, markets, jobs"
+    "eco": "Business, markets, jobs",
+    "bourse": "Indices, stocks, earnings and ETFs"
   },
   "home": {
     "greetingMorning": "Good morning",

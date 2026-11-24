@@ -16,6 +16,7 @@ const TOPIC_LABEL: Record<CategoryId, { fr: string; en: string }> = {
   politique: { fr: "politique française", en: "politics" },
   actu: { fr: "actualité générale (France et monde)", en: "general news (world)" },
   eco: { fr: "économie, entreprises et marchés", en: "economy, business and markets" },
+  bourse: { fr: "bourse et marchés cotés", en: "stock markets and listed companies" },
 };
 
 const BriefSchema = z.object({
@@ -39,6 +40,12 @@ function buildPrompt(items: RawItem[], category: CategoryId, locale: "fr" | "en"
     })
     .join("\n");
   const language = locale === "fr" ? "français" : "anglais";
+  const marketInstructions = category === "bourse"
+    ? `
+- Privilégie les mouvements significatifs des indices, les résultats et perspectives d'entreprises cotées, ainsi que les nouvelles importantes sur les ETF.
+- Pour les chiffres de marché, précise l'indice ou le titre et la période quand ils sont indiqués. Distingue résultats, prévisions et commentaires.
+- Explique le contexte et les facteurs à surveiller. Écarte les recommandations d'achat ou de vente, les objectifs de cours et les promesses de rendement.`
+    : "";
 
   return `Tu rédiges « RiaNews », un brief d'actualité lu sur mobile par quelqu'un de pressé qui veut être au courant et pouvoir en parler autour de lui.
 
@@ -58,7 +65,7 @@ Consignes :
   - a_placer : 1 phrase courte à placer dans une conversation (un chiffre frappant, une mise en perspective, un contexte peu connu). Ton naturel, pas de formule toute faite.
   - item_numbers : les numéros des dépêches utilisées.
 - intro : une phrase qui résume la tendance de la rubrique aujourd'hui.
-- N'invente rien : appuie-toi uniquement sur les dépêches fournies. Si une info est incertaine, reste prudent dans la formulation.
+- N'invente rien : appuie-toi uniquement sur les dépêches fournies. Si une info est incertaine, reste prudent dans la formulation.${marketInstructions}
 - Rédige en ${language}, phrases simples, ton neutre et vivant.`;
 }
 

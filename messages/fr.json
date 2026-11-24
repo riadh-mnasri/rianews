@@ -8,14 +8,16 @@
     "tech": "Tech",
     "politique": "Politique",
     "actu": "Actualités",
-    "eco": "Économie"
+    "eco": "Économie",
+    "bourse": "Bourse"
   },
   "categoryHints": {
     "ia": "Modèles, start-up, régulation",
     "tech": "Numérique, produits, cybersécurité",
     "politique": "Gouvernement, Parlement, élections",
     "actu": "France et monde",
-    "eco": "Entreprises, marchés, emploi"
+    "eco": "Entreprises, marchés, emploi",
+    "bourse": "Indices, actions, résultats et ETF"
   },
   "home": {
     "greetingMorning": "Bonjour",

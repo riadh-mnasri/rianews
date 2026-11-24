@@ -24,7 +24,7 @@ function useIsDark(): boolean {
 }
 
 const btn =
-  "flex h-9 items-center justify-center text-foreground-muted transition-colors hover:text-foreground active:scale-90";
+  "flex h-11 min-w-11 items-center justify-center text-foreground-muted transition-colors hover:text-foreground active:scale-90";
 
 export function ThemeToggle() {
   const t = useTranslations("home");
@@ -34,7 +34,7 @@ export function ThemeToggle() {
       type="button"
       onClick={() => setPrefs({ theme: dark ? "light" : "dark" })}
       aria-label={dark ? t("lightMode") : t("darkMode")}
-      className={`${btn} w-9`}
+      className={`${btn}`}
     >
       {dark ? <Sun className="h-[1.05rem] w-[1.05rem]" strokeWidth={1.75} /> : <Moon className="h-[1.05rem] w-[1.05rem]" strokeWidth={1.75} />}
     </button>
