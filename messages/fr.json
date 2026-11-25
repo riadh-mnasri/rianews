@@ -25,6 +25,7 @@
     "greetingEvening": "Bonsoir",
     "subtitle": "Voici ce qu'il faut savoir aujourd'hui.",
     "all": "À la une",
+    "sections": "Rubriques",
     "topThree": "Les 3 infos à retenir",
     "readingTime": "{minutes} min de lecture",
     "updated": "Mis à jour {time}",

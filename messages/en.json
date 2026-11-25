@@ -25,6 +25,7 @@
     "greetingEvening": "Good evening",
     "subtitle": "Here is what you need to know today.",
     "all": "Top stories",
+    "sections": "Sections",
     "topThree": "3 things to remember",
     "readingTime": "{minutes} min read",
     "updated": "Updated {time}",

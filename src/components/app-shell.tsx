@@ -108,7 +108,7 @@ function CategoryFeed({
         </p>
       )}
       {stories.map((story, i) => (
-        <StoryCard key={story.id} story={story} category={category} index={i} />
+        <StoryCard key={story.id} story={story} headingLevel={limit ? 3 : 2} id={i === 0 && limit ? `story-${category}` : undefined} />
       ))}
     </div>
   );
@@ -135,7 +135,6 @@ export function AppShell() {
     "",
   );
   const tabsRef = useRef<HTMLDivElement>(null);
-  const touch = useRef<{ x: number; y: number } | null>(null);
 
   const interests = prefs.interests;
   const { states, refresh } = useBriefs(interests, locale);
@@ -150,21 +149,12 @@ export function AppShell() {
     setTab(next);
     const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
     window.scrollTo({ top: 0, behavior });
-    const el = tabsRef.current?.querySelector<HTMLElement>(`[data-tab="${next}"]`);
-    el?.scrollIntoView({ behavior, inline: "center", block: "nearest" });
-  }
-
-  function onTouchEnd(e: React.TouchEvent) {
-    const start = touch.current;
-    touch.current = null;
-    if (!start || e.touches.length > 0 || e.changedTouches.length !== 1) return;
-    if ((window.visualViewport?.scale ?? 1) > 1) return;
-    const dx = e.changedTouches[0].clientX - start.x;
-    const dy = e.changedTouches[0].clientY - start.y;
-    if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.8) return;
-    const i = tabs.indexOf(activeTab);
-    const next = tabs[i + (dx < 0 ? 1 : -1)];
-    if (next) goTo(next);
+    const strip = tabsRef.current;
+    const button = strip?.querySelector<HTMLElement>(`[data-tab="${next}"]`);
+    if (strip && button) {
+      const left = button.getBoundingClientRect().left - strip.getBoundingClientRect().left;
+      strip.scrollTo({ left: strip.scrollLeft + left - (strip.clientWidth - button.offsetWidth) / 2, behavior });
+    }
   }
 
   const loadedStates = interests.map((c) => states[c]).filter(Boolean) as BriefState[];
@@ -193,72 +183,71 @@ export function AppShell() {
     <div className="relative min-h-dvh">
       {!prefs.onboarded && <Onboarding />}
 
-      <header className="pt-safe relative z-20 bg-background md:sticky md:top-0 md:bg-background/95 shadow-[0_4px_16px_rgb(14_23_39/0.04)] md:backdrop-blur-md">
-        <div className="page-gutter mx-auto flex max-w-[72rem] items-center justify-between pt-3 pb-2.5 md:pt-5 md:pb-3">
-          <Logo />
-          <div className="-mr-2 flex items-center">
-            <LocaleToggle />
-            <ThemeToggle />
-            <button type="button" onClick={refresh} aria-label={t("refresh")} className={iconBtn}>
-              <RefreshCw className={`h-[1.05rem] w-[1.05rem] ${anyLoading ? "animate-spin" : ""}`} strokeWidth={1.75} />
-            </button>
-            <button type="button" onClick={() => setSettingsOpen(true)} aria-label={t("settings")} className={iconBtn}>
-              <Settings2 className="h-[1.05rem] w-[1.05rem]" strokeWidth={1.75} />
-            </button>
+      <header className="contents md:sticky md:top-0 md:z-20 md:block md:bg-background">
+        <div className="pt-safe">
+          <div className="page-gutter mx-auto flex max-w-[72rem] items-center justify-between py-2 md:pt-5 md:pb-3">
+            <Logo />
+            <div className="-mr-2 flex items-center">
+              <LocaleToggle />
+              <ThemeToggle />
+              <button type="button" onClick={refresh} aria-label={t("refresh")} className={iconBtn}>
+                <RefreshCw className={`h-[1.05rem] w-[1.05rem] ${anyLoading ? "animate-spin" : ""}`} strokeWidth={1.75} />
+              </button>
+            </div>
           </div>
         </div>
-        <nav className="border-y border-border">
-          <div ref={tabsRef} className="page-gutter no-scrollbar mx-auto flex max-w-[72rem] gap-5 overflow-x-auto md:gap-6">
-            {tabs.map((id) => {
-              const active = id === activeTab;
-              const color = id === "home" ? "var(--foreground)" : CATEGORY_META[id].color;
-              return (
-                <button
-                  key={id}
-                  data-tab={id}
-                  aria-current={active ? "true" : undefined}
-                  type="button"
-                  onClick={() => goTo(id)}
-                  className={`relative min-h-11 shrink-0 py-3 text-[0.8rem] font-semibold md:text-[0.9rem] tracking-[0.06em] uppercase transition-colors ${
-                    active ? "text-foreground" : "text-foreground-muted hover:text-foreground"
-                  }`}
-                >
-                  {id === "home" ? t("all") : tc(id)}
-                  <span
-                    className={`absolute inset-x-0 -bottom-px h-[3px] transition-opacity ${active ? "opacity-100" : "opacity-0"}`}
-                    style={{ background: color }}
-                  />
-                </button>
-              );
-            })}
+        <nav aria-label={t("sections")} className="sticky top-[env(safe-area-inset-top,0px)] z-20 border-y border-border bg-background shadow-sm md:static">
+          <div className="page-gutter mx-auto flex max-w-[72rem] items-stretch">
+            <div ref={tabsRef} className="no-scrollbar flex min-w-0 flex-1 gap-1 overflow-x-auto py-1.5 md:gap-2">
+              {tabs.map((id) => {
+                const active = id === activeTab;
+                const color = id === "home" ? "var(--foreground)" : CATEGORY_META[id].color;
+                return (
+                  <button
+                    key={id}
+                    data-tab={id}
+                    aria-current={active ? "true" : undefined}
+                    type="button"
+                    onClick={() => goTo(id)}
+                    className={`min-h-11 shrink-0 rounded-lg px-3 text-sm font-semibold transition-colors focus-visible:outline-offset-[-3px] ${
+                      active ? "bg-surface-muted text-foreground" : "text-foreground-muted hover:text-foreground"
+                    }`}
+                  >
+                    <span style={active ? { color } : undefined}>{id === "home" ? t("all") : tc(id)}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <button
+              type="button"
+              onClick={() => setSettingsOpen(true)}
+              aria-label={t("settings")}
+              className="ml-2 flex w-11 shrink-0 items-center justify-center border-l border-border text-foreground-muted hover:text-foreground"
+            >
+              <span aria-hidden="true" className="text-base font-semibold md:hidden">Aa</span>
+              <Settings2 aria-hidden="true" className="hidden size-5 md:block" strokeWidth={1.75} />
+            </button>
           </div>
         </nav>
       </header>
 
-      <main
-        className="page-gutter reading edition-content mx-auto max-w-[72rem] pt-5 md:pt-10"
-        onTouchStart={(e) => {
-          touch.current = e.touches.length === 1 ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : null;
-        }}
-        onTouchCancel={() => (touch.current = null)}
-        onTouchEnd={onTouchEnd}
-      >
+      <main className="page-gutter reading edition-content mx-auto max-w-[72rem] pt-4 md:pt-10">
         {offline && (
           <p className="mb-5 flex items-center gap-2 border-y border-border py-2.5 text-[0.75em] text-foreground-muted">
             <WifiOff className="h-4 w-4 shrink-0" strokeWidth={1.75} /> {t("offline")}
           </p>
         )}
 
-        <div className="edition-banner mb-6 rounded-2xl px-5 py-7 md:mb-8 md:px-12 md:py-14">
+        <div className="edition-banner mb-5 rounded-2xl px-4 py-5 md:mb-8 md:px-12 md:py-14">
           <div className="relative max-w-2xl">
             <p className="kicker text-[#f1c995] first-letter:uppercase">
               {today}
               {today && activeTab === "home" && <span> · {edition}</span>}
             </p>
-            <h1 className="serif mt-3 text-[1.95em] leading-[0.98] font-semibold tracking-[-0.035em] text-balance md:text-[3em]">
+            <h1 className="serif mt-2 text-[1.65em] leading-[1.06] font-semibold tracking-[-0.035em] text-balance md:text-[3em]">
               {activeTab === "home" ? t("homeTitle") : tc(activeTab)}
             </h1>
-            <p className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-[0.72em] text-[#d8dce5] empty:hidden">
+            <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[0.72em] text-[#d8dce5] empty:hidden">
               {storyCount > 0 && <span>{t("readingTime", { minutes })}</span>}
               {lastUpdate && <span>{t("updated", { time: timeAgo(lastUpdate) ?? "" })}</span>}
             </p>
@@ -274,16 +263,20 @@ export function AppShell() {
             action={<PrimaryButton onClick={() => setSettingsOpen(true)}>{t("chooseInterests")}</PrimaryButton>}
           />
         ) : activeTab === "home" ? (
-          <div className="space-y-12">
+          <div className="space-y-9 md:space-y-12">
             {topThree.length > 0 && (
-              <section className="rise rounded-xl border border-border bg-surface px-5 pt-5 pb-3 md:px-7 md:pt-6">
+              <section className="rise rounded-xl border border-border bg-surface px-4 pt-4 pb-2 md:px-7 md:pt-6">
                 <h2 className="kicker text-foreground">{t("topThree")}</h2>
                 <ol className="mt-3 grid divide-y divide-border md:auto-cols-fr md:grid-flow-col md:divide-x md:divide-y-0">
                   {topThree.map(({ category, story }) => (
                     <li key={category} className="md:px-5 md:first:pl-0 md:last:pr-0">
                       <button
                         type="button"
-                        onClick={() => goTo(category)}
+                        onClick={() => {
+                          const article = document.getElementById(`story-${category}`);
+                          article?.focus({ preventScroll: true });
+                          article?.scrollIntoView({ block: "start" });
+                        }}
                         className="group flex h-full w-full items-start justify-between gap-3 py-3 text-left"
                       >
                         <span className="min-w-0">
@@ -302,7 +295,7 @@ export function AppShell() {
               </section>
             )}
 
-            <div className="mx-auto max-w-[47rem] space-y-12">
+            <div className="mx-auto max-w-[47rem] space-y-9 md:space-y-12">
               {interests.map((category) => {
                 const meta = CATEGORY_META[category];
                 return (

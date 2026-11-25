@@ -1,7 +1,7 @@
 // © 2026 Riadh MNASRI
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { X } from "lucide-react";
 import { usePathname, useRouter } from "@/i18n/navigation";
@@ -42,33 +42,49 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    document.addEventListener("keydown", onKey);
+    const dialog = dialogRef.current;
+    const previousOverflow = document.body.style.overflow;
+    dialog?.showModal();
     document.body.style.overflow = "hidden";
     return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
+      dialog?.close();
+      document.body.style.overflow = previousOverflow;
     };
-  }, [onClose]);
+  }, []);
+
+  function close() {
+    dialogRef.current?.close();
+    onClose();
+  }
 
   return (
-    <div className="fixed inset-0 z-40" role="dialog" aria-modal="true" aria-label={t("title")}>
+    <dialog
+      ref={dialogRef}
+      aria-label={t("title")}
+      onCancel={(event) => {
+        event.preventDefault();
+        close();
+      }}
+      className="fixed inset-0 m-0 h-full max-h-none w-full max-w-none bg-transparent p-0 text-foreground backdrop:bg-transparent"
+    >
       <button
         type="button"
-        aria-label={t("close")}
-        onClick={onClose}
+        aria-hidden="true"
+        tabIndex={-1}
+        onClick={close}
         className="fade-in absolute inset-0 bg-[#1c1a17]/45"
       />
       <div className="sheet-in absolute inset-x-0 bottom-0 mx-auto max-h-[90dvh] max-w-xl overflow-y-auto rounded-t-xl border-t-[3px] border-rule bg-background shadow-[0_-12px_40px_rgb(0_0_0/0.18)]">
         <div className="sticky top-0 z-10 flex items-center justify-between bg-background px-6 pt-3 pb-3">
-                    <h2 className="serif pt-2 text-[1.7rem] font-semibold">{t("title")}</h2>
+          <h2 className="serif pt-2 text-[1.7rem] font-semibold">{t("title")}</h2>
           <button
             type="button"
-            onClick={onClose}
+            onClick={close}
             aria-label={t("close")}
-            className="mt-2 -mr-2 flex h-10 w-10 items-center justify-center text-foreground-muted transition-colors hover:text-foreground active:scale-90"
+            className="mt-2 -mr-2 flex size-11 items-center justify-center text-foreground-muted transition-colors hover:text-foreground active:scale-90"
           >
             <X className="h-5 w-5" strokeWidth={1.75} />
           </button>
@@ -90,7 +106,7 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
                   step={1}
                   value={prefs.textSize}
                   onChange={(e) => setPrefs({ textSize: Number(e.target.value) })}
-                  className="h-2 flex-1 cursor-pointer accent-[var(--accent)]"
+                  className="h-11 min-w-0 flex-1 cursor-pointer accent-[var(--accent)]"
                   aria-label={t("textSize")}
                 />
                 <span className="serif text-2xl font-semibold">A</span>
@@ -126,6 +142,6 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
           </section>
         </div>
       </div>
-    </div>
+    </dialog>
   );
 }

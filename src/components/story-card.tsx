@@ -4,24 +4,22 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Check, Share } from "lucide-react";
-import type { CategoryId } from "@/data/categories";
-import { CATEGORY_META } from "@/data/category-meta";
 import type { Story } from "@/lib/types";
 import { useTimeAgo } from "@/components/time-ago";
 
 export function StoryCard({
   story,
-  category,
-  index,
+  headingLevel,
+  id,
 }: {
   story: Story;
-  category: CategoryId;
-  index: number;
+  headingLevel: 2 | 3;
+  id?: string;
 }) {
   const t = useTranslations("home");
   const timeAgo = useTimeAgo();
   const [copied, setCopied] = useState(false);
-  const color = CATEGORY_META[category].color;
+  const Heading = headingLevel === 2 ? "h2" : "h3";
   const when = timeAgo(story.publishedAt);
 
   async function share() {
@@ -40,31 +38,25 @@ export function StoryCard({
 
   return (
     <article
-      className="rise article-copy border-t border-border py-7 first:border-t-0 first:pt-2"
-      style={{ animationDelay: `${Math.min(index, 6) * 50}ms` }}
+      id={id}
+      tabIndex={id ? -1 : undefined}
+      className="article-copy scroll-mt-[calc(4.25rem+env(safe-area-inset-top,0px))] border-t border-border py-6 first:border-t-0 first:pt-2 md:scroll-mt-[calc(9rem+env(safe-area-inset-top,0px))] md:py-8"
     >
-      <div className="flex items-baseline gap-3">
-        <span className="serif text-[1.9em] leading-none font-medium tabular-nums" style={{ color }}>
-          {index + 1}
-        </span>
-        {when && <span className="kicker text-foreground-muted">{when}</span>}
-      </div>
+      {when && <p className="mb-2 text-sm font-medium text-foreground-muted">{when}</p>}
 
-      <h3 className="serif mt-2 text-[1.4em] leading-[1.18] font-semibold tracking-[-0.012em] text-balance">
+      <Heading className="serif text-[1.34em] leading-[1.15] font-semibold tracking-[-0.015em] text-pretty">
         {story.title}
-      </h3>
+      </Heading>
 
       {story.essentiel && (
-        <p className="serif hyphens mt-3 text-[1em] leading-[1.68] text-pretty">{story.essentiel}</p>
+        <p className="serif hyphens mt-3 text-[1em] leading-[1.58] text-pretty">{story.essentiel}</p>
       )}
 
       {story.pourquoi && (
-        <p className="serif hyphens mt-3 text-[0.94em] leading-[1.65] text-foreground-muted">
-          <span className="kicker mr-1.5 text-foreground" style={{ fontSize: "0.74em" }}>
-            {t("why")}.
-          </span>
-          {story.pourquoi}
-        </p>
+        <div className="mt-4 rounded-lg bg-surface-muted px-4 py-3">
+          <p className="text-sm font-semibold">{t("why")}</p>
+          <p className="serif hyphens mt-1 text-[0.95em] leading-[1.55]">{story.pourquoi}</p>
+        </div>
       )}
 
       {story.aPlacer && (
@@ -78,26 +70,25 @@ export function StoryCard({
         </figure>
       )}
 
-      <div className="mt-5 flex items-center justify-between gap-3">
-        <p className="min-w-0 leading-relaxed text-[0.76em] text-foreground-muted">
-          {story.sources.map((source, i) => (
-            <span key={source.url}>
-              {i > 0 && <span className="mx-1.5 opacity-50">/</span>}
+      <div className="mt-4 flex items-start justify-between gap-3">
+        <ul aria-label={t("sources")} className="flex min-w-0 flex-wrap gap-x-3 text-[0.75em] text-foreground-muted">
+          {story.sources.map((source) => (
+            <li key={source.url} className="min-w-0">
               <a
                 href={source.url}
                 target="_blank"
                 rel="noreferrer"
-                className="underline decoration-border decoration-1 underline-offset-[3px] transition-colors hover:text-foreground hover:decoration-current"
+                className="flex min-h-11 items-center py-1 underline decoration-current decoration-1 underline-offset-[3px] hover:text-foreground"
               >
                 {source.label}
               </a>
-            </span>
+            </li>
           ))}
-        </p>
+        </ul>
         <button
           type="button"
           onClick={share}
-          aria-label={t("share")}
+          aria-label={copied ? t("copied") : t("share")}
           className="-mr-2 flex size-11 shrink-0 items-center justify-center text-foreground-muted transition-colors hover:text-foreground active:scale-90"
         >
           {copied ? <Check className="h-4 w-4 text-accent" /> : <Share className="h-4 w-4" strokeWidth={1.75} />}
@@ -110,7 +101,7 @@ export function StoryCard({
 export function StorySkeleton() {
   return (
     <div className="border-t border-border py-7 first:border-t-0 first:pt-2">
-      <div className="skeleton h-7 w-7" />
+      <div className="skeleton h-4 w-20" />
       <div className="skeleton mt-4 h-6 w-11/12" />
       <div className="skeleton mt-2 h-6 w-3/5" />
       <div className="skeleton mt-5 h-4 w-full" />
