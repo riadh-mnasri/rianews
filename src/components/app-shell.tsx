@@ -104,7 +104,7 @@ function CategoryFeed({
   return (
     <div>
       {brief.intro && (
-        <p className="serif mb-4 text-[1.08em] leading-snug text-foreground-muted italic text-pretty">
+        <p className="reading-copy mb-5 text-foreground-muted">
           {brief.intro}
         </p>
       )}
@@ -249,20 +249,18 @@ export function AppShell() {
           </p>
         )}
 
-        <div className="edition-banner mb-5 rounded-2xl px-4 py-5 md:mb-8 md:px-12 md:py-14">
-          <div className="relative max-w-2xl">
-            <p className="kicker text-[#b9d7f6] first-letter:uppercase">
-              {today}
-              {today && activeTab === "home" && <span> · {edition}</span>}
-            </p>
-            <h1 className="serif mt-2 text-[1.65em] leading-[1.06] font-semibold tracking-[-0.035em] text-balance md:text-[3em]">
-              {activeTab === "home" ? t("homeTitle") : tc(activeTab)}
-            </h1>
-            <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[0.72em] text-[#d8dce5] empty:hidden">
-              {wordCount > 0 && <span>{t("readingTime", { minutes })}</span>}
-              {lastUpdate && <span>{t("updated", { time: timeAgo(lastUpdate) ?? "" })}</span>}
-            </p>
-          </div>
+        <div className="reading-column mb-7 border-b border-border pb-5 md:mb-9 md:pb-6">
+          <p className="text-sm font-medium text-foreground-muted first-letter:uppercase">
+            {today}
+            {today && activeTab === "home" && <span> · {edition}</span>}
+          </p>
+          <h1 className="serif mt-2 text-[1.7em] leading-tight font-semibold text-balance md:text-[2.15em]">
+            {activeTab === "home" ? t("homeTitle") : tc(activeTab)}
+          </h1>
+          <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[0.72em] text-foreground-muted empty:hidden">
+            {wordCount > 0 && <span>{t("readingTime", { minutes })}</span>}
+            {lastUpdate && <span>{t("updated", { time: timeAgo(lastUpdate) ?? "" })}</span>}
+          </p>
         </div>
         {rawMode && <p className="mb-6 text-[0.7em] text-foreground-muted">{t("rawMode")}</p>}
 
@@ -276,11 +274,11 @@ export function AppShell() {
         ) : activeTab === "home" ? (
           <div className="space-y-9 md:space-y-12">
             {topThree.length > 0 && (
-              <section className="rise rounded-xl border border-border bg-surface px-4 pt-4 pb-2 md:px-7 md:pt-6">
-                <h2 className="kicker text-foreground">{t("topThree")}</h2>
-                <ol className="mt-3 grid divide-y divide-border md:auto-cols-fr md:grid-flow-col md:divide-x md:divide-y-0">
+              <section className="reading-column rounded-xl border border-border bg-surface px-4 pt-4 pb-2 md:px-6">
+                <h2 className="text-[0.95em] font-semibold">{t("topThree")}</h2>
+                <ol className="mt-2 divide-y divide-border">
                   {topThree.map(({ category, story }) => (
-                    <li key={category} className="md:px-5 md:first:pl-0 md:last:pr-0">
+                    <li key={category}>
                       <button
                         type="button"
                         onClick={() => {
@@ -294,7 +292,7 @@ export function AppShell() {
                           <span className="kicker block" style={{ color: CATEGORY_META[category].color, fontSize: "0.65em" }}>
                             {tc(category)}
                           </span>
-                          <span className="serif mt-0.5 block text-[1.08em] leading-tight font-semibold decoration-1 underline-offset-4 group-hover:underline">
+                          <span className="serif mt-0.5 block text-[1.06em] leading-snug font-medium decoration-1 underline-offset-4 group-hover:underline">
                             {story.title}
                           </span>
                         </span>
@@ -312,7 +310,7 @@ export function AppShell() {
               refreshCount={latestRefresh}
             />
 
-            <div className="mx-auto max-w-[47rem] space-y-9 md:space-y-12">
+            <div className="reading-column space-y-9 md:space-y-12">
               {interests.map((category) => {
                 const meta = CATEGORY_META[category];
                 return (
@@ -337,7 +335,7 @@ export function AppShell() {
             </div>
           </div>
         ) : (
-          <div className="mx-auto max-w-[47rem]">
+          <div className="reading-column">
             <CategoryFeed key={activeTab} category={activeTab} state={states[activeTab]} onRetry={refresh} />
           </div>
         )}

@@ -48,12 +48,12 @@ export function StoryCard({
         <p className="mb-2 text-sm font-medium text-foreground-muted"><time dateTime={story.publishedAt}>{when}</time></p>
       )}
 
-      <Heading className="serif text-[1.34em] leading-[1.15] font-semibold tracking-[-0.015em] text-pretty">
+      <Heading className="serif text-[1.3em] leading-snug font-semibold text-pretty">
         {story.title}
       </Heading>
 
       {summary && (
-        <p className="serif hyphens mt-3 text-[1em] leading-[1.58] text-pretty">{summary}</p>
+        <p className="reading-copy mt-2.5">{summary}</p>
       )}
 
       {(story.pourquoi || story.aPlacer) && (
@@ -66,13 +66,13 @@ export function StoryCard({
             {story.pourquoi && (
               <div>
                 <p className="text-sm font-semibold">{t("why")}</p>
-                <p className="serif hyphens mt-1 leading-relaxed">{story.pourquoi}</p>
+                <p className="reading-copy mt-1">{story.pourquoi}</p>
               </div>
             )}
             {story.aPlacer && (
               <div>
                 <p className="text-sm font-semibold">{t("context")}</p>
-                <p className="serif hyphens mt-1 leading-relaxed">{story.aPlacer}</p>
+                <p className="reading-copy mt-1">{story.aPlacer}</p>
               </div>
             )}
           </div>

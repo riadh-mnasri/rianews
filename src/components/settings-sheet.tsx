@@ -94,7 +94,7 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
           <section>
             <h3 className="kicker mb-3 text-foreground-muted" style={{ fontSize: "0.72rem" }}>{t("textSize")}</h3>
             <div className="border border-border bg-surface p-4">
-              <p className="serif leading-snug" style={{ fontSize: TEXT_SIZES[prefs.textSize] }}>
+              <p className="reading-copy" style={{ fontSize: TEXT_SIZES[prefs.textSize] }}>
                 {t("preview")}
               </p>
               <div className="mt-4 flex items-center gap-3">

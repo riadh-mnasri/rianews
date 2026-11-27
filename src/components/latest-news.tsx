@@ -8,7 +8,7 @@ import type { LatestItem } from "@/lib/types";
 import { useTimeAgo } from "@/components/time-ago";
 
 const CHECK_INTERVAL_MS = 5 * 60 * 1000;
-const PREVIEW_COUNT = 5;
+const PREVIEW_COUNT = 3;
 
 type Feed = {
   visible: LatestItem[] | null;
@@ -77,20 +77,20 @@ export function LatestNews({ categories, refreshCount }: { categories: string; r
           {item.title}
           <ArrowUpRight aria-hidden="true" className="size-4 shrink-0 text-foreground-muted" />
         </a>
-        {item.excerpt && <p className="serif hyphens mt-1 leading-relaxed text-pretty">{item.excerpt}</p>}
+        {item.excerpt && <p className="reading-copy mt-1">{item.excerpt}</p>}
       </li>
     );
   }
 
   return (
-    <section aria-labelledby="latest-heading" className="mx-auto max-w-[47rem] rounded-xl border border-border bg-surface px-4 pt-4 pb-2 md:px-7 md:pt-6">
-      <h2 id="latest-heading" className="serif text-[1.5em] leading-snug font-semibold">{t("latestTitle")}</h2>
-      <div className="flex min-h-11 items-center">
+    <section aria-labelledby="latest-heading" className="reading-column rounded-xl border border-border bg-surface px-4 pt-4 pb-2 md:px-6">
+      <h2 id="latest-heading" className="serif text-[1.35em] leading-snug font-semibold">{t("latestTitle")}</h2>
+      <div className="mb-3 flex items-center">
         <button type="button" disabled={!feed.pending} onClick={() => {
           setFeed((current) => current.pending
             ? { ...current, visible: current.pending, pending: null }
             : current);
-        }} className="min-h-11 text-sm font-semibold text-accent hover:underline disabled:invisible">
+        }} className="min-h-11 text-sm font-semibold text-accent hover:underline disabled:hidden">
           {t("latestShowNew")}
         </button>
         <span role="status" className="sr-only">{feed.pending ? t("latestShowNew") : ""}</span>
