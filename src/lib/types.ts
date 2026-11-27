@@ -10,6 +10,11 @@ export type RawItem = {
   foreign?: boolean;
 };
 
+export type LatestItem = Omit<RawItem, "foreign" | "publishedAt"> & {
+  category: CategoryId;
+  publishedAt: string;
+};
+
 export type Story = {
   id: string;
   title: string;

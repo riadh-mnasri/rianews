@@ -9,6 +9,7 @@ import type { Brief, RawItem, Story } from "@/lib/types";
 const MODEL = process.env.ANTHROPIC_BRIEF_MODEL || "claude-opus-5-5";
 const MAX_ITEMS_FOR_AI = 45;
 const STORIES_PER_BRIEF = 6;
+const EXCERPT_PRIORITY_MS = 6 * 60 * 60 * 1000;
 
 const TOPIC_LABEL: Record<CategoryId, { fr: string; en: string }> = {
   ia: { fr: "intelligence artificielle", en: "artificial intelligence" },
@@ -36,7 +37,8 @@ function buildPrompt(items: RawItem[], category: CategoryId, locale: "fr" | "en"
   const list = items
     .map((item, i) => {
       const excerpt = item.excerpt ? `\n   ${item.excerpt}` : "";
-      return `${i + 1}. [${item.source}] ${item.title}${excerpt}`;
+      const date = item.publishedAt ?? "date inconnue";
+      return `${i + 1}. [${item.source} · ${date}] ${item.title}${excerpt}`;
     })
     .join("\n");
   const language = locale === "fr" ? "français" : "anglais";
@@ -50,19 +52,22 @@ function buildPrompt(items: RawItem[], category: CategoryId, locale: "fr" | "en"
   return `Tu rédiges « RiaNews », un brief d'actualité lu sur mobile par quelqu'un de pressé qui veut être au courant et pouvoir en parler autour de lui.
 
 Rubrique : ${TOPIC_LABEL[category][locale]}.
+Date et heure de l’édition : ${new Date().toISOString()}.
 
 Dépêches des dernières 48 heures (numérotées) :
 ${list}
 
 Consignes :
-- Choisis les ${STORIES_PER_BRIEF} sujets les plus importants ou les plus marquants. Regroupe les dépêches qui parlent du même sujet en un seul.
+- Choisis jusqu’à ${STORIES_PER_BRIEF} sujets qui correspondent directement à la rubrique et apportent un fait nouveau. Regroupe les dépêches qui couvrent le même événement et couvre des sujets différents quand les sources le permettent.
+- Privilégie les annonces, faits confirmés et développements des dernières 24 heures. Pour un événement déjà connu, explique ce qui vient de changer. Garde un sujet plus ancien seulement s’il reste important et n’a pas été dépassé par une nouvelle dépêche.
+- Une date de publication récente ne suffit pas : écarte les guides intemporels, rétrospectives et tribunes sans fait d’actualité. Si les dépêches ne contiennent pas assez de faits pour un résumé, propose moins de sujets.
 - Écarte les contenus promotionnels, bons plans, tests produits et sujets anecdotiques sans portée.
 - Classe-les du plus important au moins important.
 - Pour chaque sujet :
   - title : titre court et clair, 8 à 12 mots, sans clickbait.
-  - essentiel : 2 phrases maximum (40 mots au plus) qui disent ce qui s'est passé, avec les chiffres ou les noms clés.
+  - essentiel : 2 à 3 phrases (60 mots au plus) qui précisent le fait nouveau, qui est concerné et les chiffres clés disponibles.
   - pourquoi : 1 phrase qui explique pourquoi ça compte.
-  - a_placer : 1 phrase courte à placer dans une conversation (un chiffre frappant, une mise en perspective, un contexte peu connu). Ton naturel, pas de formule toute faite.
+  - a_placer : 1 phrase sur la prochaine étape si elle est documentée, ou un élément de contexte qui aide à comprendre le fait nouveau. Laisse vide si les sources ne donnent aucun détail supplémentaire.
   - item_numbers : les numéros des dépêches utilisées.
 - intro : une phrase qui résume la tendance de la rubrique aujourd'hui.
 - N'invente rien : appuie-toi uniquement sur les dépêches fournies. Si une info est incertaine, reste prudent dans la formulation.${marketInstructions}
@@ -70,7 +75,13 @@ Consignes :
 }
 
 function rawBrief(items: RawItem[], category: CategoryId, locale: string): Brief {
-  const stories: Story[] = items.filter((item) => !item.foreign).slice(0, 10).map((item, i) => ({
+  const localItems = items.filter((item) => !item.foreign);
+  // À fraîcheur comparable, un article avec un extrait est plus utile à lire.
+  const ranked = localItems.map((item) => {
+    const published = item.publishedAt ? Date.parse(item.publishedAt) : 0;
+    return { item, score: (published || 0) + (item.excerpt ? EXCERPT_PRIORITY_MS : 0) };
+  }).sort((a, b) => b.score - a.score);
+  const stories: Story[] = ranked.slice(0, 10).map(({ item }, i) => ({
     id: `${category}-raw-${i}`,
     title: item.title,
     essentiel: item.excerpt ?? "",
@@ -106,6 +117,7 @@ async function aiBrief(
 
   if (response.stop_reason === "refusal" || !response.parsed_output) return null;
   const parsed = response.parsed_output;
+  if (parsed.stories.length === 0) return null;
 
   const stories: Story[] = parsed.stories.slice(0, STORIES_PER_BRIEF).map((s, i) => {
     const used = s.item_numbers

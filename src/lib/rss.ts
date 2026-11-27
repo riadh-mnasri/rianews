@@ -7,7 +7,7 @@ const parser = new Parser();
 const MAX_AGE_MS = 48 * 60 * 60 * 1000;
 const PER_FEED = 25;
 
-function normalize(title: string): string {
+export function normalizeTitle(title: string): string {
   return title
     .toLowerCase()
     .normalize("NFD")
@@ -16,10 +16,10 @@ function normalize(title: string): string {
     .trim();
 }
 
-function cleanExcerpt(value: string | undefined): string | null {
+function cleanExcerpt(value: string | undefined, title: string): string | null {
   if (!value) return null;
   const text = value.replace(/\s+/g, " ").trim();
-  if (text.length < 40) return null;
+  if (text.length < 40 || normalizeTitle(text) === normalizeTitle(title)) return null;
   return text.length > 320 ? `${text.slice(0, 317).trimEnd()}…` : text;
 }
 
@@ -28,14 +28,14 @@ async function fetchFeed({ url, label, foreign }: Feed): Promise<RawItem[]> {
     const res = await fetch(url, {
       headers: { "User-Agent": "Mozilla/5.0 (compatible; RiaNews/1.0)" },
       signal: AbortSignal.timeout(8000),
-      next: { revalidate: 900 },
+      next: { revalidate: 300 },
     });
     if (!res.ok) return [];
     const feed = await parser.parseString(await res.text());
     const isGoogle = url.includes("news.google.com");
 
     return (feed.items ?? []).slice(0, PER_FEED).flatMap((item) => {
-      if (!item.title || !item.link) return [];
+      if (!item.title?.trim() || !item.link || !/^https?:\/\//i.test(item.link)) return [];
       let title = item.title.trim();
       let source = label;
       if (isGoogle) {
@@ -51,8 +51,8 @@ async function fetchFeed({ url, label, foreign }: Feed): Promise<RawItem[]> {
           title,
           url: item.link,
           source,
-          publishedAt: item.isoDate ?? null,
-          excerpt: isGoogle ? null : cleanExcerpt(item.contentSnippet ?? item.summary),
+          publishedAt: item.isoDate && Number.isFinite(Date.parse(item.isoDate)) ? item.isoDate : null,
+          excerpt: isGoogle ? null : cleanExcerpt(item.contentSnippet, title) ?? cleanExcerpt(item.summary, title),
           foreign,
         },
       ];
@@ -69,20 +69,21 @@ export async function fetchCategoryItems(
   const feeds = FEEDS[locale][category];
   const batches = await Promise.all(feeds.map(fetchFeed));
   const now = Date.now();
-  const seen = new Set<string>();
+  const unique = new Map<string, RawItem>();
 
-  return batches
-    .flat()
-    .filter((item) => {
-      if (item.publishedAt) {
-        const age = now - new Date(item.publishedAt).getTime();
-        if (age > MAX_AGE_MS || age < -3600_000) return false;
-      }
-      const key = normalize(item.title).slice(0, 60);
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    })
+  for (const item of batches.flat()) {
+    if (item.publishedAt) {
+      const age = now - new Date(item.publishedAt).getTime();
+      if (age > MAX_AGE_MS || age < -3600_000) continue;
+    }
+    const key = normalizeTitle(item.title).slice(0, 60);
+    const existing = unique.get(key);
+    if (!existing || (!item.foreign && (existing.foreign || (!existing.excerpt && item.excerpt)))) {
+      unique.set(key, item);
+    }
+  }
+
+  return [...unique.values()]
     .sort((a, b) => {
       const ta = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
       const tb = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;

@@ -52,7 +52,7 @@ self.addEventListener("fetch", (event) => {
   }
 
   // Pages et API : réseau d'abord, cache en secours.
-  if (request.mode === "navigate" || url.pathname.startsWith("/api/brief")) {
+  if (request.mode === "navigate" || url.pathname === "/api/brief" || url.pathname === "/api/latest") {
     event.respondWith(
       fetch(request)
         .then((res) => {

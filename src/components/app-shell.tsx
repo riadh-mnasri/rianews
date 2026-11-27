@@ -12,6 +12,7 @@ import { StoryCard, StorySkeleton } from "@/components/story-card";
 import { SettingsSheet } from "@/components/settings-sheet";
 import { Onboarding } from "@/components/onboarding";
 import { InstallBanner } from "@/components/install-banner";
+import { LatestNews } from "@/components/latest-news";
 import { Logo } from "@/components/logo";
 import { LocaleToggle, ThemeToggle } from "@/components/header-toggles";
 import { useTimeAgo } from "@/components/time-ago";
@@ -123,6 +124,7 @@ export function AppShell() {
   const edition = useEdition();
   const timeAgo = useTimeAgo();
   const [tab, setTab] = useState<Tab>("home");
+  const [latestRefresh, setLatestRefresh] = useState(0);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const offline = !useOnline();
   const today = useClientValue(
@@ -159,7 +161,11 @@ export function AppShell() {
 
   const loadedStates = interests.map((c) => states[c]).filter(Boolean) as BriefState[];
   const anyLoading = loadedStates.some((s) => s.loading);
-  const rawMode = loadedStates.some((s) => s.brief?.mode === "raw" && s.brief.stories.length > 0);
+  const visibleCategories = activeTab === "home" ? interests : [activeTab];
+  const rawMode = visibleCategories.some((category) => {
+    const brief = states[category]?.brief;
+    return brief?.mode === "raw" && brief.stories.length > 0;
+  });
   const lastUpdate = loadedStates
     .map((s) => s.brief?.generatedAt)
     .filter((d): d is string => Boolean(d))
@@ -171,13 +177,18 @@ export function AppShell() {
       const s = states[c]?.brief?.stories[0];
       return s ? [{ category: c, story: s }] : [];
     })
+    .sort((a, b) => (Date.parse(b.story.publishedAt ?? "") || 0) - (Date.parse(a.story.publishedAt ?? "") || 0))
     .slice(0, 3);
 
-  const storyCount = (activeTab === "home" ? interests : [activeTab]).reduce(
-    (n, c) => n + Math.min(states[c]?.brief?.stories.length ?? 0, activeTab === "home" ? 3 : 99),
-    0,
-  );
-  const minutes = Math.max(1, Math.round((storyCount * 75) / 230));
+  const wordCount = visibleCategories.reduce((count, category) => {
+    const stories = states[category]?.brief?.stories ?? [];
+    const visibleStories = activeTab === "home" ? stories.slice(0, 3) : stories;
+    return count + visibleStories.reduce((total, story) => {
+      const text = [story.essentiel, story.pourquoi, story.aPlacer].join(" ").trim();
+      return total + (text ? text.split(/\s+/).length : 0);
+    }, 0);
+  }, 0);
+  const minutes = Math.max(1, Math.round(wordCount / 230));
 
   return (
     <div className="relative min-h-dvh">
@@ -190,7 +201,7 @@ export function AppShell() {
             <div className="-mr-2 flex items-center">
               <LocaleToggle />
               <ThemeToggle />
-              <button type="button" onClick={refresh} aria-label={t("refresh")} className={iconBtn}>
+              <button type="button" onClick={() => { refresh(); setLatestRefresh((count) => count + 1); }} aria-label={t("refresh")} className={iconBtn}>
                 <RefreshCw className={`h-[1.05rem] w-[1.05rem] ${anyLoading ? "animate-spin" : ""}`} strokeWidth={1.75} />
               </button>
             </div>
@@ -248,7 +259,7 @@ export function AppShell() {
               {activeTab === "home" ? t("homeTitle") : tc(activeTab)}
             </h1>
             <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[0.72em] text-[#d8dce5] empty:hidden">
-              {storyCount > 0 && <span>{t("readingTime", { minutes })}</span>}
+              {wordCount > 0 && <span>{t("readingTime", { minutes })}</span>}
               {lastUpdate && <span>{t("updated", { time: timeAgo(lastUpdate) ?? "" })}</span>}
             </p>
           </div>
@@ -294,6 +305,12 @@ export function AppShell() {
                 </ol>
               </section>
             )}
+
+            <LatestNews
+              key={`${locale}:${interests.join(",")}`}
+              categories={interests.join(",")}
+              refreshCount={latestRefresh}
+            />
 
             <div className="mx-auto max-w-[47rem] space-y-9 md:space-y-12">
               {interests.map((category) => {

@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Check, Share } from "lucide-react";
+import { ArrowUpRight, Check, ChevronDown, Share } from "lucide-react";
 import type { Story } from "@/lib/types";
 import { useTimeAgo } from "@/components/time-ago";
 
@@ -21,10 +21,12 @@ export function StoryCard({
   const [copied, setCopied] = useState(false);
   const Heading = headingLevel === 2 ? "h2" : "h3";
   const when = timeAgo(story.publishedAt);
+  const summary = story.essentiel.trim();
+  const linkOnly = !summary && !story.pourquoi?.trim() && !story.aPlacer?.trim();
 
   async function share() {
     const url = story.sources[0]?.url;
-    const text = `${story.title}\n\n${story.essentiel}`;
+    const text = summary ? `${story.title}\n\n${summary}` : story.title;
     try {
       if (navigator.share) {
         await navigator.share({ title: story.title, text, url });
@@ -42,32 +44,39 @@ export function StoryCard({
       tabIndex={id ? -1 : undefined}
       className="article-copy scroll-mt-[calc(4.25rem+env(safe-area-inset-top,0px))] border-t border-border py-6 first:border-t-0 first:pt-2 md:scroll-mt-[calc(9rem+env(safe-area-inset-top,0px))] md:py-8"
     >
-      {when && <p className="mb-2 text-sm font-medium text-foreground-muted">{when}</p>}
+      {when && story.publishedAt && (
+        <p className="mb-2 text-sm font-medium text-foreground-muted"><time dateTime={story.publishedAt}>{when}</time></p>
+      )}
 
       <Heading className="serif text-[1.34em] leading-[1.15] font-semibold tracking-[-0.015em] text-pretty">
         {story.title}
       </Heading>
 
-      {story.essentiel && (
-        <p className="serif hyphens mt-3 text-[1em] leading-[1.58] text-pretty">{story.essentiel}</p>
+      {summary && (
+        <p className="serif hyphens mt-3 text-[1em] leading-[1.58] text-pretty">{summary}</p>
       )}
 
-      {story.pourquoi && (
-        <div className="mt-4 rounded-lg bg-surface-muted px-4 py-3">
-          <p className="text-sm font-semibold">{t("why")}</p>
-          <p className="serif hyphens mt-1 text-[0.95em] leading-[1.55]">{story.pourquoi}</p>
-        </div>
-      )}
-
-      {story.aPlacer && (
-        <figure className="mt-5 border-l-2 pl-4" style={{ borderColor: "var(--accent)" }}>
-          <figcaption className="kicker text-accent" style={{ fontSize: "0.66em" }}>
-            {t("toDrop")}
-          </figcaption>
-          <blockquote className="serif mt-1 text-[1.02em] leading-[1.5] italic">
-            « {story.aPlacer} »
-          </blockquote>
-        </figure>
+      {(story.pourquoi || story.aPlacer) && (
+        <details className="group mt-3 rounded-lg bg-surface-muted px-4">
+          <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 text-sm font-semibold [&::-webkit-details-marker]:hidden">
+            <ChevronDown aria-hidden="true" className="size-4 group-open:rotate-180" />
+            {t("moreContext")}
+          </summary>
+          <div className="space-y-3 pb-4">
+            {story.pourquoi && (
+              <div>
+                <p className="text-sm font-semibold">{t("why")}</p>
+                <p className="serif hyphens mt-1 leading-relaxed">{story.pourquoi}</p>
+              </div>
+            )}
+            {story.aPlacer && (
+              <div>
+                <p className="text-sm font-semibold">{t("context")}</p>
+                <p className="serif hyphens mt-1 leading-relaxed">{story.aPlacer}</p>
+              </div>
+            )}
+          </div>
+        </details>
       )}
 
       <div className="mt-4 flex items-start justify-between gap-3">
@@ -78,9 +87,12 @@ export function StoryCard({
                 href={source.url}
                 target="_blank"
                 rel="noreferrer"
-                className="flex min-h-11 items-center py-1 underline decoration-current decoration-1 underline-offset-[3px] hover:text-foreground"
+                className={linkOnly
+                  ? "inline-flex min-h-11 items-center gap-2 rounded-lg bg-surface-muted px-3 py-2 font-semibold text-foreground hover:bg-accent-soft"
+                  : "flex min-h-11 items-center py-1 underline decoration-current decoration-1 underline-offset-[3px] hover:text-foreground"}
               >
-                {source.label}
+                {linkOnly ? t("readAtSource", { source: source.label }) : source.label}
+                {linkOnly && <ArrowUpRight aria-hidden="true" className="size-4 shrink-0" />}
               </a>
             </li>
           ))}
