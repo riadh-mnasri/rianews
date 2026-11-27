@@ -53,7 +53,7 @@ export function applyPrefsToDocument(prefs: Prefs) {
   root.style.setProperty("--reading-size", `${TEXT_SIZES[prefs.textSize] ?? 20}px`);
   document
     .querySelector('meta[name="theme-color"]')
-    ?.setAttribute("content", dark ? "#1c1a17" : "#f5f0e6");
+    ?.setAttribute("content", dark ? "#1c1a17" : "#f4f6f8");
 }
 
 export function setPrefs(update: Partial<Prefs>) {

@@ -251,7 +251,7 @@ export function AppShell() {
 
         <div className="edition-banner mb-5 rounded-2xl px-4 py-5 md:mb-8 md:px-12 md:py-14">
           <div className="relative max-w-2xl">
-            <p className="kicker text-[#f1c995] first-letter:uppercase">
+            <p className="kicker text-[#b9d7f6] first-letter:uppercase">
               {today}
               {today && activeTab === "home" && <span> · {edition}</span>}
             </p>
